@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getCatById } from "@/lib/cats";
+import { UploadIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
@@ -8,9 +9,21 @@ type PageProps = {
 };
 
 export default async function CatPage({ params }: PageProps) {
-  const cat = getCatById(params.id);
+  const cat = await getCatById(params.id);
 
-  if (!cat) return <div>Cat not found</div>;
+  if (!cat)
+    return (
+      <div className="flex items-center justify-center h-screen flex-col">
+        <p className="pb-8">Sorry, but we couldn&apos;t find that cat.</p>
+        <p> Heres one of ours though!</p>
+        <Image
+          src={"/cats/buddy.jpg"}
+          alt={"Buddy the cat"}
+          width={200}
+          height={200}
+        />
+      </div>
+    );
 
   return (
     <div className="space-y-8 py-8">
@@ -18,22 +31,28 @@ export default async function CatPage({ params }: PageProps) {
         <div className="flex items-center flex-col">
           <h1 className="font-bold text-3xl">This is {cat.name}</h1>
           <p>from {cat.city}</p>
+          <p>He has been seen {cat.seenCount} times.</p>
 
           <Image src={cat.photoUrl} alt={cat.name} width={300} height={300} />
         </div>
       </section>
       <section className="bg-blue-100 py-8">
-        <div className="flex items-center flex-col space-y-4">
+        <div className="flex items-center flex-col">
           <p>Have you seen this cat?</p>
-          <Button>Yes, I see them now!</Button>
-          <Button>Upload a photo</Button>
+          <p className="pb-8">
+            Upload a photo to let the owner know they are ok!
+          </p>
+          <Button>
+            Upload Image
+            <UploadIcon />
+          </Button>
         </div>
       </section>
       <section>
         <div className="flex items-center flex-col space-y-4">
           <p>Recent photos</p>
           <div>
-            <p>Taken by Zack on 4/27/25</p>
+            <p>Uploaded on 4/27/25 at 12:30pm</p>
             <Image src={cat.photoUrl} alt={cat.name} width={300} height={300} />
           </div>
         </div>
