@@ -6,8 +6,15 @@ export const cats = [
     name: "Buddy",
     city: "philadelphia",
     photoUrl: "/cats/buddy.jpg",
+    seenCount: 1,
   },
-  { id: "002", name: "Gibby", city: "Philadelphia", photoUrl: "" },
+  {
+    id: "002",
+    name: "Gibby",
+    city: "Philadelphia",
+    photoUrl: "",
+    seenCount: 0,
+  },
 ];
 
 export function getCatById(id: string) {
