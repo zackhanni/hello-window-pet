@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { getCatById } from "@/lib/cats";
+import { getCatById, getCatPhotos } from "@/lib/cats";
+import { Image, ImageKitProvider } from "@imagekit/next";
 import { UploadIcon } from "lucide-react";
-import Image from "next/image";
+
 import React from "react";
 
 type PageProps = {
@@ -25,6 +26,9 @@ export default async function CatPage({ params }: PageProps) {
       </div>
     );
 
+  const photos = await getCatPhotos(params.id);
+  console.log(photos);
+
   return (
     <div className="space-y-8 py-8">
       <section>
@@ -33,7 +37,15 @@ export default async function CatPage({ params }: PageProps) {
           <p>from {cat.city}</p>
           <p>He has been seen {cat.seenCount} times.</p>
 
-          <Image src={cat.photoUrl} alt={cat.name} width={300} height={300} />
+          <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
+            <Image
+              src={cat.photoUrl}
+              width={300}
+              height={300}
+              alt={cat.name}
+              priority
+            />
+          </ImageKitProvider>
         </div>
       </section>
       <section className="bg-blue-100 py-8">
@@ -51,10 +63,28 @@ export default async function CatPage({ params }: PageProps) {
       <section>
         <div className="flex items-center flex-col space-y-4">
           <p>Recent photos</p>
-          <div>
+          {/* <div>
             <p>Uploaded on 4/27/25 at 12:30pm</p>
             <Image src={cat.photoUrl} alt={cat.name} width={300} height={300} />
-          </div>
+          </div> */}
+
+          {photos ? (
+            <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
+              {photos.map((photo) => (
+                <div key={photo.fileId} className="flex flex-col items-center">
+                  <p>Taken {photo.createdAt}</p>
+                  <Image
+                    src={photo.filePath}
+                    width={300}
+                    height={300}
+                    alt={photo.name}
+                  />
+                </div>
+              ))}
+            </ImageKitProvider>
+          ) : (
+            <p>No photos yet.</p>
+          )}
         </div>
       </section>
     </div>
