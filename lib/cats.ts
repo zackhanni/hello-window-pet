@@ -6,12 +6,14 @@ export const cats = [
     name: "Buddy",
     city: "philadelphia",
     photoUrl: "/cats/001/buddy.jpg",
+    species: "cat",
   },
   {
     id: "002",
     name: "Gibby",
     city: "Philadelphia",
     photoUrl: "/cats/001/buddy2.jpg",
+    species: "cat",
   },
 ];
 
