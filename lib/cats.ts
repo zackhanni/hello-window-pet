@@ -4,6 +4,7 @@ export const cats = [
   {
     id: "001",
     name: "Buddy",
+    description: "Buddy loved to sit by the window and sun his pooch",
     city: "Philadelphia",
     photoUrl: "/cats/001/buddy.jpg",
     species: "cat",
@@ -11,6 +12,8 @@ export const cats = [
   {
     id: "002",
     name: "Gibby",
+    description:
+      "She loves attention and the occasional play bite. She may look angry, but shes usually pretty sweet.",
     city: "Philadelphia",
     photoUrl: "/cats/001/buddy2.jpg",
     species: "cat",

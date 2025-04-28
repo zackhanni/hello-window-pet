@@ -18,20 +18,21 @@ interface Animal {
   city: string;
   photoUrl: string;
   species: string;
+  description: string;
 }
 
 export const AnimalCard = async ({ animal }: { animal: Animal }) => {
   const photos = await getCatPhotos(animal.id);
 
-  const { id, name, city, species, photoUrl } = animal;
+  const { id, name, city, species, photoUrl, description } = animal;
 
   return (
     <Card className="flex flex-col items-center justify-center max-w-md">
       <CardHeader className="w-full">
-        <CardTitle>Name: {name}</CardTitle>
-        <CardDescription>
-          {name} is from {city} and has {photos.length} photos.
-        </CardDescription>
+        <CardTitle>
+          {name} from {city} has {photos.length} photos.
+        </CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
