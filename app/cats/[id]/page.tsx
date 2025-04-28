@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
+import { UploadButton } from "@/components/uploadButton";
 import { getCatById, getCatPhotos } from "@/lib/cats";
 import { Image, ImageKitProvider } from "@imagekit/next";
-import { UploadIcon } from "lucide-react";
 
 import React from "react";
 
@@ -27,7 +26,7 @@ export default async function CatPage({ params }: PageProps) {
     );
 
   const photos = await getCatPhotos(params.id);
-  console.log(photos);
+  // console.log(photos);
 
   return (
     <div className="space-y-8 py-8">
@@ -35,7 +34,7 @@ export default async function CatPage({ params }: PageProps) {
         <div className="flex items-center flex-col">
           <h1 className="font-bold text-3xl">This is {cat.name}</h1>
           <p>from {cat.city}</p>
-          <p>He has been seen {cat.seenCount} times.</p>
+          <p>They have been seen {photos.length} times.</p>
 
           <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
             <Image
@@ -54,10 +53,7 @@ export default async function CatPage({ params }: PageProps) {
           <p className="pb-8">
             Upload a photo to let the owner know they are ok!
           </p>
-          <Button>
-            Upload Image
-            <UploadIcon />
-          </Button>
+          <UploadButton catId={cat.id} />
         </div>
       </section>
       <section>

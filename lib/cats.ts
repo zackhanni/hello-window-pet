@@ -25,7 +25,7 @@ export function getAllCats() {
   return cats;
 }
 
-function convertFromZuluTime(zuluString) {
+function convertFromZuluTime(zuluString: string) {
   return new Date(zuluString);
 }
 
