@@ -6,14 +6,12 @@ export const cats = [
     name: "Buddy",
     city: "philadelphia",
     photoUrl: "/cats/001/buddy.jpg",
-    seenCount: 1,
   },
   {
     id: "002",
     name: "Gibby",
     city: "Philadelphia",
-    photoUrl: "/cats/002/gibby.jpg",
-    seenCount: 0,
+    photoUrl: "/cats/001/buddy2.jpg",
   },
 ];
 
