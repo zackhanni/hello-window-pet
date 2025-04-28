@@ -1,13 +1,19 @@
+import { auth } from "@/auth";
+import SignIn from "@/components/SignIn";
 import { Button } from "@/components/ui/button";
 import { Cat } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+const Home = async () => {
+  const session = await auth();
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <h1 className="text-3xl">Did you see my window cat?</h1>
+
+        <p className="bg-red-200 text-black">Hello {session?.user?.name}</p>
 
         <p className="dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
           Check out window cats below! Or, sign up for your own cat account to
@@ -23,23 +29,26 @@ export default function Home() {
               See all cats <Cat />
             </Button>
           </Link>
-          <Link href={"/account"} className="w-full">
+
+          <SignIn />
+
+          {/* <Link href={"/account"} className="w-full">
             <Button
               variant={"secondary"}
               className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto md:w-[158px] w-full"
             >
               Sign Up
             </Button>
-          </Link>
+          </Link> */}
 
-          <Link href={"/account"} className="w-full">
+          {/* <Link href={"/account"} className="w-full">
             <Button
               variant={"secondary"}
               className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto md:w-[158px] w-full"
             >
               Sign In
             </Button>
-          </Link>
+          </Link> */}
         </div>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
@@ -61,4 +70,6 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+};
+
+export default Home;
