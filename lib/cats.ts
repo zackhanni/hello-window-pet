@@ -4,7 +4,7 @@ export const cats = [
   {
     id: "001",
     name: "Buddy",
-    city: "philadelphia",
+    city: "Philadelphia",
     photoUrl: "/cats/001/buddy.jpg",
     species: "cat",
   },
