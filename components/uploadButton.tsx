@@ -126,7 +126,7 @@ export const UploadButton = ({ catId }: { catId: string }) => {
         </Button>
         <DialogContent className="sm:max-w-md">
           {submitSuccess ? (
-            <div className="flex flex-col items-center space-y-4">
+            <div className="flex flex-col items-center justify-center space-y-4 h-screen">
               <DialogTitle>Upload successful!</DialogTitle>
               <DialogClose asChild>
                 <Link href={`/cats/${catId}`}>
