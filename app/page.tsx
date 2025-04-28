@@ -23,7 +23,7 @@ export default function Home() {
               See all cats <Cat />
             </Button>
           </Link>
-          <Link href={"/"} className="w-full">
+          <Link href={"/account"} className="w-full">
             <Button
               variant={"secondary"}
               className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto md:w-[158px] w-full"
@@ -32,7 +32,7 @@ export default function Home() {
             </Button>
           </Link>
 
-          <Link href={"/"} className="w-full">
+          <Link href={"/account"} className="w-full">
             <Button
               variant={"secondary"}
               className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto md:w-[158px] w-full"
