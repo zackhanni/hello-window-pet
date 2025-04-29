@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { UploadIcon } from "lucide-react";
+import { Plus, UploadIcon } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -30,8 +30,11 @@ import { Input } from "./ui/input";
 import Link from "next/link";
 
 const formSchema = z.object({
+  name: z.string().max(100),
+  description: z.string().max(1000),
+  species: z.string().max(100),
+  age: z.number(),
   image: z.any(),
-  name: z.string().max(100).optional(),
 });
 
 const authenticator = async () => {
@@ -58,12 +61,15 @@ const authenticator = async () => {
 
 export const CreateAnimal = ({ catId }: { catId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(true);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      image: null,
       name: "",
+      description: "",
+      species: "",
+      age: 0,
+      image: null,
     },
   });
 
@@ -120,8 +126,8 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
       <Dialog>
         <Button asChild>
           <DialogTrigger>
-            Upload Image
-            <UploadIcon />
+            Add new animal
+            <Plus />
           </DialogTrigger>
         </Button>
         <DialogContent className="sm:max-w-md">
@@ -129,7 +135,7 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
             <div className="flex flex-col items-center justify-center space-y-4 h-screen">
               <DialogTitle>Upload successful!</DialogTitle>
               <DialogClose asChild>
-                <Link href={`/cats/${catId}`}>
+                <Link href={`/account`}>
                   <Button>Continue</Button>
                 </Link>
               </DialogClose>
@@ -137,9 +143,9 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
           ) : (
             <>
               <DialogHeader>
-                <DialogTitle>Upload Photo</DialogTitle>
+                <DialogTitle>New animal form</DialogTitle>
                 <DialogDescription>
-                  Let the owner know their cat is ok!
+                  Add details about your pet.
                 </DialogDescription>
               </DialogHeader>
               <form
@@ -151,9 +157,57 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Your name (optional)</FormLabel>
+                      <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Anonymous" {...field} />
+                        <Input placeholder="Dilbert Doggfried" {...field} />
+                      </FormControl>
+                      {/* <FormDescription>This will be public.</FormDescription> */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Share a funny story or a weird fact"
+                          {...field}
+                        />
+                      </FormControl>
+                      {/* <FormDescription>This will be public.</FormDescription> */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="age"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Age</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="" {...field} />
+                      </FormControl>
+                      {/* <FormDescription>This will be public.</FormDescription> */}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="species"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Species</FormLabel>
+                      <FormControl>
+                        <Input placeholder="cat? dog? horse?" {...field} />
                       </FormControl>
                       {/* <FormDescription>This will be public.</FormDescription> */}
                       <FormMessage />
@@ -212,7 +266,9 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
 
                 <Button
                   type="submit"
-                  disabled={isLoading || !form.watch("image")}
+                  disabled={
+                    isLoading || !form.watch("image") || !form.watch("name")
+                  }
                   className="w-full"
                 >
                   Upload Image
