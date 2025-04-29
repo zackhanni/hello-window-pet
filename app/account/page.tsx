@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { AnimalCard } from "@/components/AnimalCard";
+import CreateAnimal from "@/components/CreateAnimal";
 import { GeneratePDF } from "@/components/GeneratePDF";
 import HowItWorks from "@/components/HowItWorks";
 import { SignOut } from "@/components/SignOut";
@@ -16,7 +17,7 @@ const Account = async () => {
   //     console.log("Delete cat id: ", id);
   //   }
 
-  if (!session?.user) redirect("/");
+  if (!session?.user?.email) redirect("/");
 
   const pets = await getUserPetsByEmail(session.user.email);
 
@@ -40,8 +41,11 @@ const Account = async () => {
       <hr />
       <HowItWorks />
       <hr />
-      <section>
-        <p className="text-3xl font-bold pb-4 text-center">My Animals</p>
+      <section className="flex flex-col justify-center space-y-4">
+        <div className="flex justify-center">
+          <CreateAnimal userEmail={session.user.email} />
+        </div>
+        <p className="text-3xl font-bold text-center">My Animals</p>
         <div className="flex items-center justify-center flex-col md:flex-row gap-8">
           {pets.map((animal) => (
             <div key={animal.id} className="flex flex-col">
