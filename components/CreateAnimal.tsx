@@ -28,6 +28,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import Link from "next/link";
+import { userExists } from "@/lib/cats";
 
 const formSchema = z.object({
   name: z.string().max(100),
@@ -59,7 +60,7 @@ const authenticator = async () => {
   }
 };
 
-export const CreateAnimal = ({ catId }: { catId: string }) => {
+const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -76,6 +77,17 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
+    console.log(userEmail);
+    // // check if user exists in db
+    // if (await userExists(userEmail)) {
+    //   // add animal to db
+    // } else {
+    //   // create user
+    //   //add animal to db
+    // }
+
+    const animalId = "001"; //temp until above is fixed
+
     try {
       // 1. Get auth params
       const { token, expire, signature } = await authenticator();
@@ -84,7 +96,7 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
       const formData = new FormData();
       formData.append("file", values.image);
       formData.append("fileName", values.image.name);
-      formData.append("folder", `cats/${catId}`);
+      formData.append("folder", `pets/${animalId}`);
       formData.append(
         "publicKey",
         process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!
@@ -92,7 +104,6 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
       formData.append("signature", signature);
       formData.append("expire", expire.toString());
       formData.append("token", token);
-      formData.append("creator", values.name ?? "Anonymous"); // fix this later - create the actual fields on imagekit
 
       // 3. Upload manually
       const response = await fetch(
@@ -290,3 +301,5 @@ export const CreateAnimal = ({ catId }: { catId: string }) => {
     </Form>
   );
 };
+
+export default CreateAnimal;
