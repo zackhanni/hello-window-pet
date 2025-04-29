@@ -8,7 +8,7 @@ const page = async () => {
   console.log(allCats);
 
   return (
-    <div className="py-8">
+    <main className="py-8">
       <h1 className="text-center text-3xl font-bold pb-4">
         Check out some recent cats!
       </h1>
@@ -17,7 +17,7 @@ const page = async () => {
           <AnimalCard animal={cat} key={cat.id} />
         ))}
       </section>
-    </div>
+    </main>
   );
 };
 

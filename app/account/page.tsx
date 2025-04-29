@@ -19,7 +19,7 @@ const Account = async () => {
   if (!session?.user) redirect("/");
 
   return (
-    <div className="py-8 space-y-8">
+    <main className="py-8 space-y-8">
       <section className="flex items-center justify-center">
         <div className="flex flex-col items-center justify-center">
           {session.user.image && (
@@ -55,7 +55,7 @@ const Account = async () => {
           ))}
         </div>
       </section>
-    </div>
+    </main>
   );
 };
 

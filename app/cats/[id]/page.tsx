@@ -29,7 +29,7 @@ export default async function CatPage({ params }: PageProps) {
   // console.log(photos);
 
   return (
-    <div className="space-y-8 py-8">
+    <main className="space-y-8 py-8">
       <section>
         <div className="flex items-center flex-col">
           <h1 className="font-bold text-3xl">This is {cat.name}</h1>
@@ -83,6 +83,6 @@ export default async function CatPage({ params }: PageProps) {
           )}
         </div>
       </section>
-    </div>
+    </main>
   );
 }
