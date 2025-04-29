@@ -20,6 +20,9 @@ const Navigation = ({ session }: { session: Session }) => {
             <Link href={"/api/auth/signin"}>Make Account</Link>
           </li>
         )}
+        <li className={`p-4 hover:underline`}>
+          <Link href={"/"}>About</Link>
+        </li>
       </ul>
     </nav>
   );
