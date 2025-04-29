@@ -9,6 +9,12 @@ export async function getAllCats() {
   return await prisma.pet.findMany();
 }
 
+export async function userExists(email: string) {
+  const user = getUserByEmail(email);
+  if (!user) return false;
+  return true;
+}
+
 export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({ where: { email: email } });
 }
