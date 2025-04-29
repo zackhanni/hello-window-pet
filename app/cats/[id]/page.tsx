@@ -1,5 +1,5 @@
 import { UploadButton } from "@/components/uploadButton";
-import { getCatById, getCatPhotos } from "@/lib/cats";
+import { getCatById, getAnimalPhotos } from "@/lib/cats";
 import { Image, ImageKitProvider } from "@imagekit/next";
 
 import React from "react";
@@ -25,7 +25,7 @@ export default async function CatPage({ params }: PageProps) {
       </div>
     );
 
-  const photos = await getCatPhotos(params.id);
+  const photos = await getAnimalPhotos(params.id);
   // console.log(photos);
 
   return (
@@ -38,7 +38,7 @@ export default async function CatPage({ params }: PageProps) {
 
           <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
             <Image
-              src={cat.imageUrl}
+              src={cat.imageUrl ?? "/default-image.jpg"}
               width={300}
               height={300}
               alt={cat.name}

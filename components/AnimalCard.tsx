@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getCatPhotos } from "@/lib/cats";
+import { getAnimalPhotos } from "@/lib/cats";
 import { Image, ImageKitProvider } from "@imagekit/next";
 import Link from "next/link";
 import React from "react";
@@ -24,7 +24,7 @@ interface Animal {
 }
 
 export const AnimalCard = async ({ animal }: { animal: Animal }) => {
-  const photos = await getCatPhotos(animal.id);
+  const photos = await getAnimalPhotos(animal.id);
 
   const { id, name, species, imageUrl, description } = animal;
 
@@ -39,7 +39,7 @@ export const AnimalCard = async ({ animal }: { animal: Animal }) => {
       <CardContent className="grid gap-4">
         <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
           <Image
-            src={imageUrl}
+            src={imageUrl ?? "/default-image.jpg"}
             width={300}
             height={300}
             alt={name}
