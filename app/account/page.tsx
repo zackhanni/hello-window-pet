@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { AnimalCard } from "@/components/AnimalCard";
 import { GeneratePDF } from "@/components/GeneratePDF";
+import HowItWorks from "@/components/HowItWorks";
 import { SignOut } from "@/components/SignOut";
 import { Button } from "@/components/ui/button";
 import { getAllCats } from "@/lib/cats";
@@ -35,6 +36,8 @@ const Account = async () => {
           <SignOut />
         </div>
       </section>
+      <hr />
+      <HowItWorks />
       <hr />
       <section>
         <p className="text-3xl font-bold pb-4 text-center">My Animals</p>
