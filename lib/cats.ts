@@ -25,10 +25,10 @@ function convertFromZuluTime(zuluString: string) {
   return new Date(zuluString);
 }
 
-export const getCatPhotos = async (catId: string) => {
+export const getAnimalPhotos = async (AnimalId: string) => {
   try {
     const result = await imagekit.listFiles({
-      path: `cats/${catId}`,
+      path: `pets/${AnimalId}`,
     });
 
     return result.map((file) => {
