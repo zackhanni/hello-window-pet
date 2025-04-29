@@ -1,33 +1,22 @@
 import imagekit from "./imagekit";
+import { prisma } from "@/lib/prisma";
 
-export const cats = [
-  {
-    id: "001",
-    name: "Buddy",
-    description: "Buddy loved to sit by the window and sun his pooch",
-    age: "12",
-    // city: "Philadelphia",
-    imageUrl: "/cats/001/buddy.jpg",
-    species: "cat",
-  },
-  {
-    id: "002",
-    name: "Gibby",
-    description:
-      "She loves attention and the occasional play bite. She may look angry, but shes usually pretty sweet.",
-    age: "6",
-    // city: "Philadelphia",
-    imageUrl: "/cats/001/buddy2.jpg",
-    species: "cat",
-  },
-];
-
-export function getCatById(id: string) {
-  return cats.find((cat) => cat.id === id);
+export async function getCatById(id: string) {
+  return await prisma.pet.findUnique({ where: { id: id } });
 }
 
-export function getAllCats() {
-  return cats;
+export async function getAllCats() {
+  return await prisma.pet.findMany();
+}
+
+export async function getUserPetsByEmail(email: string) {
+  const user = await prisma.user.findUnique({ where: { email: email } });
+
+  if (!user) {
+    throw new Error(`User with email ${email} not found.`);
+  }
+
+  return await prisma.pet.findMany({ where: { userId: user.id } });
 }
 
 function convertFromZuluTime(zuluString: string) {
@@ -40,11 +29,8 @@ export const getCatPhotos = async (catId: string) => {
       path: `cats/${catId}`,
     });
 
-    // console.log(JSON.stringify(result));
-
     return result.map((file) => {
       // limit to only 10 images
-
       // sort images by date. newest first
 
       return {
