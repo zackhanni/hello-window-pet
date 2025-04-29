@@ -6,11 +6,14 @@ import QRCode from "qrcode";
 import { Button } from "./ui/button";
 
 interface Animal {
-  id: string;
   name: string;
-  city: string;
-  photoUrl: string;
-  species: string;
+  id: string;
+  userId: string;
+  description: string | null;
+  species: string | null;
+  age: number | null;
+  imageUrl: string | null; // Make this optional
+  createdAt: Date;
 }
 
 interface Props {
@@ -21,7 +24,7 @@ export const GeneratePDF = ({ animal }: Props) => {
   const generatePDF = async () => {
     const doc = new jsPDF();
 
-    const { id, name, city, photoUrl, species } = animal;
+    const { id, name, imageUrl, species } = animal;
 
     // Generate QR code as a base64 image
     const qrCodeDataURL = await QRCode.toDataURL(
@@ -32,7 +35,7 @@ export const GeneratePDF = ({ animal }: Props) => {
 
     // Add Animal Info
     doc.setFontSize(28);
-    doc.text(`This is ${name}, a ${species} from ${city}.`, 20, 20);
+    doc.text(`This is ${name}, the ${species}.`, 20, 20);
     doc.setFontSize(20);
     doc.text(`Have you seen this cat?`, 20, 30);
     doc.text(`Use the QR code below to let it's owner know its ok!`, 20, 40);

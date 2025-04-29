@@ -13,25 +13,26 @@ import Link from "next/link";
 import React from "react";
 
 interface Animal {
-  id: string;
   name: string;
-  city?: string;
-  age?: number;
-  imageUrl: string;
-  species?: string;
-  description: string;
+  id: string;
+  userId: string;
+  description: string | null;
+  species: string | null;
+  age: number | null;
+  imageUrl: string | null; // Make this optional
+  createdAt: Date;
 }
 
 export const AnimalCard = async ({ animal }: { animal: Animal }) => {
   const photos = await getCatPhotos(animal.id);
 
-  const { id, name, city, species, imageUrl, description } = animal;
+  const { id, name, species, imageUrl, description } = animal;
 
   return (
     <Card className="flex flex-col items-center justify-center max-w-md">
       <CardHeader className="w-full">
         <CardTitle>
-          {name} from {city} has {photos.length} photos.
+          {name} has {photos.length} photos.
         </CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
