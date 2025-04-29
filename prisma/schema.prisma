@@ -18,6 +18,7 @@ model User {
   email String  @unique
   name  String?
   image String?
+  city  String?
   pets  Pet[]
 }
 

@@ -33,12 +33,12 @@ export default async function CatPage({ params }: PageProps) {
       <section>
         <div className="flex items-center flex-col">
           <h1 className="font-bold text-3xl">This is {cat.name}</h1>
-          <p>from {cat.city}</p>
+          {/* <p>from {cat.city}</p> */}
           <p>They have been seen {photos.length} times.</p>
 
           <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
             <Image
-              src={cat.photoUrl}
+              src={cat.imageUrl}
               width={300}
               height={300}
               alt={cat.name}

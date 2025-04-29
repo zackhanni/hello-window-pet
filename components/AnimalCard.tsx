@@ -15,16 +15,17 @@ import React from "react";
 interface Animal {
   id: string;
   name: string;
-  city: string;
-  photoUrl: string;
-  species: string;
+  city?: string;
+  age?: number;
+  imageUrl: string;
+  species?: string;
   description: string;
 }
 
 export const AnimalCard = async ({ animal }: { animal: Animal }) => {
   const photos = await getCatPhotos(animal.id);
 
-  const { id, name, city, species, photoUrl, description } = animal;
+  const { id, name, city, species, imageUrl, description } = animal;
 
   return (
     <Card className="flex flex-col items-center justify-center max-w-md">
@@ -37,7 +38,7 @@ export const AnimalCard = async ({ animal }: { animal: Animal }) => {
       <CardContent className="grid gap-4">
         <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
           <Image
-            src={photoUrl}
+            src={imageUrl}
             width={300}
             height={300}
             alt={name}
