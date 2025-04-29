@@ -12,7 +12,7 @@ interface Animal {
   description: string | null;
   species: string | null;
   age: number | null;
-  imageUrl: string | null; // Make this optional
+  imageUrl: string | null;
   createdAt: Date;
 }
 
