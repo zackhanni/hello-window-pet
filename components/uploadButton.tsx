@@ -28,35 +28,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import Link from "next/link";
+import { uploadToImagekit } from "./UploadToImagekit";
 
 const formSchema = z.object({
   image: z.any(),
   name: z.string().max(100).optional(),
 });
 
-const authenticator = async () => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/imagekit`
-    );
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Request failed with status ${response.status}: ${errorText}`
-      );
-    }
-    const data = await response.json();
-    const { signature, expire, token } = data;
-    return { token, expire, signature };
-  } catch (error) {
-    if (error instanceof Error && "message" in error) {
-      throw new Error(`Authentication request failed: ${error.message}`);
-    }
-    throw new Error("Authentication request failed");
-  }
-};
-
-export const UploadButton = ({ catId }: { catId: string }) => {
+export const UploadButton = ({ animalId }: { animalId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(true);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -71,40 +50,12 @@ export const UploadButton = ({ catId }: { catId: string }) => {
     setIsLoading(true);
 
     try {
-      // 1. Get auth params
-      const { token, expire, signature } = await authenticator();
-
-      // 2. Build form data
-      const formData = new FormData();
-      formData.append("file", values.image);
-      formData.append("fileName", values.image.name);
-      formData.append("folder", `cats/${catId}`);
-      formData.append(
-        "publicKey",
-        process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!
-      );
-      formData.append("signature", signature);
-      formData.append("expire", expire.toString());
-      formData.append("token", token);
-      formData.append("creator", values.name ?? "Anonymous"); // fix this later - create the actual fields on imagekit
-
-      // 3. Upload manually
-      const response = await fetch(
-        "https://upload.imagekit.io/api/v1/files/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
+      const uploadedImage = await uploadToImagekit(
+        values.image,
+        `pets/${animalId}`
       );
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Upload failed: ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log("Uploaded to ImageKit!", data);
-
+      console.log("Uploaded to ImageKit!", uploadedImage);
       alert("Upload successful!");
       setSubmitSuccess(true);
     } catch (error) {
@@ -129,7 +80,7 @@ export const UploadButton = ({ catId }: { catId: string }) => {
             <div className="flex flex-col items-center justify-center space-y-4 h-screen">
               <DialogTitle>Upload successful!</DialogTitle>
               <DialogClose asChild>
-                <Link href={`/cats/${catId}`}>
+                <Link href={`/cats/${animalId}`}>
                   <Button>Continue</Button>
                 </Link>
               </DialogClose>

@@ -28,37 +28,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import Link from "next/link";
-import { userExists } from "@/lib/cats";
+import { AddAnimalToDB, getUserByEmail, userExists } from "@/lib/cats";
+import { uploadToImagekit } from "./UploadToImagekit";
 
 const formSchema = z.object({
   name: z.string().max(100),
   description: z.string().max(1000),
   species: z.string().max(100),
-  age: z.number(),
+  age: z.number().min(0).max(100),
   image: z.any(),
 });
-
-const authenticator = async () => {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/imagekit`
-    );
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `Request failed with status ${response.status}: ${errorText}`
-      );
-    }
-    const data = await response.json();
-    const { signature, expire, token } = data;
-    return { token, expire, signature };
-  } catch (error) {
-    if (error instanceof Error && "message" in error) {
-      throw new Error(`Authentication request failed: ${error.message}`);
-    }
-    throw new Error("Authentication request failed");
-  }
-};
 
 const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -77,51 +56,19 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
-    console.log(userEmail);
-    // // check if user exists in db
-    // if (await userExists(userEmail)) {
-    //   // add animal to db
-    // } else {
-    //   // create user
-    //   //add animal to db
-    // }
-
-    const animalId = "001"; //temp until above is fixed
+    // get user Id
+    // const user = await getUserByEmail(userEmail);
+    //  add animal to db
+    // const result = await AddAnimalToDB(values, user.id);
 
     try {
-      // 1. Get auth params
-      const { token, expire, signature } = await authenticator();
-
-      // 2. Build form data
-      const formData = new FormData();
-      formData.append("file", values.image);
-      formData.append("fileName", values.image.name);
-      formData.append("folder", `pets/${animalId}`);
-      formData.append(
-        "publicKey",
-        process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!
-      );
-      formData.append("signature", signature);
-      formData.append("expire", expire.toString());
-      formData.append("token", token);
-
-      // 3. Upload manually
-      const response = await fetch(
-        "https://upload.imagekit.io/api/v1/files/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
+      const animalId = "cma2wd242000149ge42q7ui59";
+      const uploadedImage = await uploadToImagekit(
+        values.image,
+        `pets/${animalId}`
       );
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Upload failed: ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log("Uploaded to ImageKit!", data);
-
+      console.log("Uploaded to ImageKit!", uploadedImage);
       alert("Upload successful!");
       setSubmitSuccess(true);
     } catch (error) {
@@ -203,7 +150,13 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
                     <FormItem>
                       <FormLabel>Age</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="" {...field} />
+                        <Input
+                          type="number"
+                          min="0"
+                          max="100"
+                          step="1"
+                          {...field}
+                        />
                       </FormControl>
                       {/* <FormDescription>This will be public.</FormDescription> */}
                       <FormMessage />
@@ -282,8 +235,7 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
                   }
                   className="w-full"
                 >
-                  Upload Image
-                  <UploadIcon />
+                  Submit
                 </Button>
 
                 <DialogFooter className="sm:justify-start">
