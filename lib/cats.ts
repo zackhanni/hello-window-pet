@@ -1,15 +1,12 @@
 "use server"; // does this fix the wierd issues?
 
+import { User } from "@prisma/client";
 import imagekit from "./imagekit";
 import { prisma } from "@/lib/prisma";
 
-export async function getCatById(id: string) {
-  return await prisma.pet.findUnique({ where: { id: id } });
-}
-
-export async function getAllCats() {
-  return await prisma.pet.findMany();
-}
+//
+// User Related
+//
 
 export async function userExists(email: string) {
   const user = getUserByEmail(email);
@@ -21,12 +18,41 @@ export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({ where: { email: email } });
 }
 
-export async function getUserPetsByEmail(email: string) {
-  const user = await getUserByEmail(email);
-  if (!user) {
-    throw new Error(`User with email ${email} not found.`);
+export async function getUserPetsByEmail(user: User) {
+  let databaseUser = await getUserByEmail(user.email);
+  if (!databaseUser) {
+    try {
+      const newUser = addUserToDB(user);
+      databaseUser = newUser;
+    } catch (error) {
+      throw new Error(`User with email ${user.email} not found: `, error);
+    }
   }
-  return await prisma.pet.findMany({ where: { userId: user.id } });
+  return await prisma.pet.findMany({ where: { userId: databaseUser.id } });
+}
+
+export async function addUserToDB(user: User) {
+  const { email, name } = user;
+
+  const newUser = await prisma.user.create({
+    data: {
+      email: email,
+      name: name,
+    },
+  });
+  return newUser;
+}
+
+//
+// Animal related
+//
+
+export async function getCatById(id: string) {
+  return await prisma.pet.findUnique({ where: { id: id } });
+}
+
+export async function getAllCats() {
+  return await prisma.pet.findMany();
 }
 
 function convertFromZuluTime(zuluString: string) {
@@ -55,11 +81,6 @@ export const getAnimalPhotos = async (AnimalId: string) => {
     return [];
   }
 };
-
-//
-//
-//
-
 interface Animal {
   name: string;
   id: string;

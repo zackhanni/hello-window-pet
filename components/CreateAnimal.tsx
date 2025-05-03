@@ -30,6 +30,7 @@ import { Input } from "./ui/input";
 import Link from "next/link";
 import {
   addAnimalToDB,
+  addUserToDB,
   changeAnimalImage,
   getUserByEmail,
   updateAnimal,
@@ -45,10 +46,13 @@ const formSchema = z.object({
 });
 
 const CreateAnimal = ({
-  userEmail,
+  user,
   animal,
 }: {
-  userEmail: string;
+  user: {
+    name: string;
+    email: string;
+  };
   animal?: {
     id: string;
     name: string;
@@ -99,8 +103,15 @@ const CreateAnimal = ({
         alert("Update successful!");
       } else {
         // If creating
-        const user = await getUserByEmail(userEmail);
-        const newAnimal = await addAnimalToDB(values, user?.id);
+
+        let databaseUser = await getUserByEmail(user.email);
+
+        if (!databaseUser) {
+          const newUser = await addUserToDB(user);
+          databaseUser = newUser;
+        }
+
+        const newAnimal = await addAnimalToDB(values, databaseUser.id);
 
         const uploadedImage = await uploadToImagekit(
           values.image,
