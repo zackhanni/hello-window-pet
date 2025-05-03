@@ -1,11 +1,13 @@
 import { AnimalCard } from "@/components/AnimalCard";
-import { getAllCats } from "@/lib/cats";
+import { Pet } from "@prisma/client";
 import React from "react";
 
 const page = async () => {
-  const allCats = await getAllCats();
+  const pets = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/pets`
+  ).then((res) => res.json());
 
-  console.log(allCats);
+  console.log(pets);
 
   return (
     <main className="py-8">
@@ -13,8 +15,8 @@ const page = async () => {
         Check out some recent cats!
       </h1>
       <section className="flex items-center justify-center flex-col md:flex-row gap-8">
-        {allCats.map((cat) => (
-          <AnimalCard animal={cat} key={cat.id} />
+        {pets.map((pet: Pet) => (
+          <AnimalCard animal={pet} key={pet.id} />
         ))}
       </section>
     </main>
