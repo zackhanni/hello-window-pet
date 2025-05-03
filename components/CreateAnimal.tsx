@@ -79,10 +79,10 @@ const CreateAnimal = ({
     setIsLoading(true);
 
     try {
-      let updatedAnimal;
-
       if (animal) {
+        //
         // If editing
+        //
         let imageUrl = animal.imageUrl;
         if (values.image) {
           const uploadedImage = await uploadToImagekit(
@@ -92,18 +92,24 @@ const CreateAnimal = ({
           imageUrl = uploadedImage.filePath;
         }
 
-        updatedAnimal = await updateAnimal(animal.id, {
-          name: values.name,
-          description: values.description,
-          species: values.species,
-          age: values.age,
-          imageUrl,
+        // Update pet
+        await fetch(`/api/pets/${animal.id}`, {
+          method: "PUT",
+          body: JSON.stringify({
+            name: values.name,
+            description: values.description,
+            species: values.species,
+            age: values.age,
+            imageUrl,
+          }),
+          headers: { "Content-Type": "application/json" },
         });
 
         alert("Update successful!");
       } else {
+        //
         // If creating
-
+        //
         let databaseUser = await getUserByEmail(user.email);
 
         if (!databaseUser) {
