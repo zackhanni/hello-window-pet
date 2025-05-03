@@ -37,7 +37,7 @@ const formSchema = z.object({
 
 export const UploadButton = ({ animalId }: { animalId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(true);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

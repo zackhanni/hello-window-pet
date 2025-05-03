@@ -28,7 +28,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import Link from "next/link";
-import { AddAnimalToDB, getUserByEmail, userExists } from "@/lib/cats";
+import {
+  AddAnimalToDB,
+  ChangeAnimalImage,
+  getUserByEmail,
+  userExists,
+} from "@/lib/cats";
 import { uploadToImagekit } from "./UploadToImagekit";
 
 const formSchema = z.object({
@@ -57,27 +62,17 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
     setIsLoading(true);
 
     try {
-      //
-      // get user Id
       const user = await getUserByEmail(userEmail);
-      // const userId = "cma2wd242000049ge1lt670ec";
-      //  add animal to db
 
-      console.log(values);
-      const result = await AddAnimalToDB(values, user?.id);
-      // get animal id for next step
-      //
+      const newAnimal = await AddAnimalToDB(values, user?.id);
 
-      console.log("Added animal to db - ", result);
-
-      const animalId = "cma2wd242000149ge42q7ui59";
       const uploadedImage = await uploadToImagekit(
         values.image,
-        `pets/${animalId}`
+        `pets/${newAnimal.id}`
       );
       console.log("Uploaded to ImageKit!", uploadedImage);
 
-      // replace placeholder cat image with uploaded image
+      await ChangeAnimalImage(newAnimal.id, uploadedImage.filePath);
 
       alert("Upload successful!");
       setSubmitSuccess(true);

@@ -76,7 +76,7 @@ export async function AddAnimalToDB(animalData: Animal, userId: string) {
   console.log("cats userId: ", userId);
   const { name, description, species, age } = animalData;
 
-  return await prisma.pet.create({
+  const newAnimal = await prisma.pet.create({
     data: {
       userId: userId,
       name: name,
@@ -86,4 +86,19 @@ export async function AddAnimalToDB(animalData: Animal, userId: string) {
       imageUrl: null,
     },
   });
+
+  return newAnimal;
+}
+
+export async function ChangeAnimalImage(animalId: string, imageUrl: string) {
+  const updatedAnimal = await prisma.pet.update({
+    where: {
+      id: animalId,
+    },
+    data: {
+      imageUrl: imageUrl,
+    },
+  });
+
+  return updatedAnimal;
 }

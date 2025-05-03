@@ -39,6 +39,8 @@ export async function uploadToImagekit(file: File, folder: string) {
     }
 
     const data = await response.json();
+
+    console.log("UPLOADED IMAGE DATA: ", data);
     return data; // returns uploaded image data
   } catch (error) {
     throw error instanceof Error ? error : new Error("Unknown upload error");
