@@ -28,14 +28,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import Link from "next/link";
-import {
-  addAnimalToDB,
-  AddAnimalToDB,
-  changeAnimalImage,
-  ChangeAnimalImage,
-  getUserByEmail,
-  userExists,
-} from "@/lib/cats";
+import { addAnimalToDB, changeAnimalImage, getUserByEmail } from "@/lib/cats";
 import { uploadToImagekit } from "./UploadToImagekit";
 
 const formSchema = z.object({

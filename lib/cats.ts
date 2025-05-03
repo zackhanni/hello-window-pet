@@ -102,3 +102,14 @@ export async function changeAnimalImage(animalId: string, imageUrl: string) {
 
   return updatedAnimal;
 }
+
+// BROKEN deletes all animals
+// export async function deleteAnimal(animalId: string) {
+//   const deletedAnimal = await prisma.pet.delete({
+//     where: {
+//       id: animalId,
+//     },
+//   });
+
+//   return deletedAnimal;
+// }

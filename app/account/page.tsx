@@ -4,7 +4,6 @@ import CreateAnimal from "@/components/CreateAnimal";
 import { GeneratePDF } from "@/components/GeneratePDF";
 import HowItWorks from "@/components/HowItWorks";
 import { SignOut } from "@/components/SignOut";
-import { Button } from "@/components/ui/button";
 import { getUserPetsByEmail } from "@/lib/cats";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -52,13 +51,6 @@ const Account = async () => {
               <AnimalCard animal={animal} />
 
               <GeneratePDF animal={animal} />
-
-              <Button
-                variant={"destructive"}
-                // onClick={() => handleDelete(cat.id)}
-              >
-                Delete listing
-              </Button>
             </div>
           ))}
         </div>
