@@ -52,7 +52,7 @@ export const UploadButton = ({ animalId }: { animalId: string }) => {
     try {
       const uploadedImage = await uploadToImagekit(
         values.image,
-        `pets/${animalId}`
+        `pets/${animalId}` // if you want to edit the naming scheme later. this is it
       );
 
       console.log("Uploaded to ImageKit!", uploadedImage);
