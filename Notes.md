@@ -6,11 +6,7 @@
 
 ## To DO
 
-- add sorting and filtering to cat list. practice useMemo, useCallback to optimize sorting/filtering
-- use reducer instead of chaining multiple useState hooks together. to change pages, sortKey, and sort order.
-- use skeleton components to keep up from being empty while db loads
-- use React Query for managing and cashing server state (helps with data fetching, updating, and synch. automatic cashing.)
--
+Moved to Jira
 
 ## Prisma
 
@@ -22,3 +18,22 @@ npx prisma db seed
 
 check db with prisma studio
 npx prisma studio
+
+## API Details
+
+/api/users/
+POST - creates new user
+GET - gets all users
+
+/api/users/[email]/
+GET - gets user by email
+DELETE - delete user by email
+
+/api/pets/
+GET - gets all pets
+POST - create new pet
+
+/api/pets/[id]/
+GET - gets pet by id
+PUT - updates pet by id
+DELETE - deletes pet by id
