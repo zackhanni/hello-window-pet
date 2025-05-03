@@ -28,7 +28,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import Link from "next/link";
-import { addAnimalToDB, changeAnimalImage, getUserByEmail } from "@/lib/cats";
+import {
+  addAnimalToDB,
+  changeAnimalImage,
+  getUserByEmail,
+  updateAnimal,
+} from "@/lib/cats";
 import { uploadToImagekit } from "./UploadToImagekit";
 
 const formSchema = z.object({
@@ -39,16 +44,29 @@ const formSchema = z.object({
   image: z.any(),
 });
 
-const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
+const CreateAnimal = ({
+  userEmail,
+  animal,
+}: {
+  userEmail: string;
+  animal?: {
+    id: string;
+    name: string;
+    description: string;
+    species: string;
+    age: number;
+    imageUrl: string;
+  };
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      species: "",
-      age: 0,
+      name: animal?.name || "",
+      description: animal?.description || "",
+      species: animal?.species || "",
+      age: animal?.age || 0,
       image: null,
     },
   });
@@ -57,19 +75,43 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
     setIsLoading(true);
 
     try {
-      const user = await getUserByEmail(userEmail);
+      let updatedAnimal;
 
-      const newAnimal = await addAnimalToDB(values, user?.id);
+      if (animal) {
+        // If editing
+        let imageUrl = animal.imageUrl;
+        if (values.image) {
+          const uploadedImage = await uploadToImagekit(
+            values.image,
+            `pets/${animal.id}`
+          );
+          imageUrl = uploadedImage.filePath;
+        }
 
-      const uploadedImage = await uploadToImagekit(
-        values.image,
-        `pets/${newAnimal.id}`
-      );
-      console.log("Uploaded to ImageKit!", uploadedImage);
+        updatedAnimal = await updateAnimal(animal.id, {
+          name: values.name,
+          description: values.description,
+          species: values.species,
+          age: values.age,
+          imageUrl,
+        });
 
-      await changeAnimalImage(newAnimal.id, uploadedImage.filePath);
+        alert("Update successful!");
+      } else {
+        // If creating
+        const user = await getUserByEmail(userEmail);
+        const newAnimal = await addAnimalToDB(values, user?.id);
 
-      alert("Upload successful!");
+        const uploadedImage = await uploadToImagekit(
+          values.image,
+          `pets/${newAnimal.id}`
+        );
+
+        await changeAnimalImage(newAnimal.id, uploadedImage.filePath);
+
+        alert("Upload successful!");
+      }
+
       setSubmitSuccess(true);
     } catch (error) {
       console.error("Upload error:", error);
@@ -84,8 +126,8 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
       <Dialog>
         <Button asChild>
           <DialogTrigger>
-            Add new animal
-            <Plus />
+            {animal ? "Update animal" : "Add new animal"}
+            {!animal && <Plus />}
           </DialogTrigger>
         </Button>
         <DialogContent className="sm:max-w-md">
@@ -101,9 +143,13 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
           ) : (
             <>
               <DialogHeader>
-                <DialogTitle>New animal form</DialogTitle>
+                <DialogTitle>
+                  {animal ? "Edit animal" : "New animal form"}
+                </DialogTitle>
                 <DialogDescription>
-                  Add details about your pet.
+                  {animal
+                    ? "Update your pet's info."
+                    : "Add details about your pet."}
                 </DialogDescription>
               </DialogHeader>
               <form
@@ -231,11 +277,13 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
                 <Button
                   type="submit"
                   disabled={
-                    isLoading || !form.watch("image") || !form.watch("name")
+                    isLoading ||
+                    (!form.watch("image") && !animal) ||
+                    !form.watch("name")
                   }
                   className="w-full"
                 >
-                  Submit
+                  {animal ? "Save Changes" : "Submit"}
                 </Button>
 
                 <DialogFooter className="sm:justify-start">
