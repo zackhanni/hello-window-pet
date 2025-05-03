@@ -5,16 +5,16 @@ import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 import { Button } from "./ui/button";
 
-interface Animal {
-  name: string;
-  id: string;
-  userId: string;
-  description: string | null;
-  species: string | null;
-  age: number | null;
-  imageUrl: string | null;
-  createdAt: Date;
-}
+// interface Animal {
+//   name: string;
+//   id: string;
+//   userId: string;
+//   description: string | null;
+//   species: string | null;
+//   age: number | null;
+//   imageUrl: string | null;
+//   createdAt: Date;
+// }
 
 interface Props {
   animal: Animal;
@@ -23,30 +23,62 @@ interface Props {
 export const GeneratePDF = ({ animal }: Props) => {
   const generatePDF = async () => {
     const doc = new jsPDF();
-
     const { id, name, imageUrl, species } = animal;
 
-    // Generate QR code as a base64 image
-    const qrCodeDataURL = await QRCode.toDataURL(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/cats/${id}`
+    const pageWidth = doc.internal.pageSize.getWidth();
+
+    // Header
+    doc.setFontSize(26);
+    doc.text(`Say Hello!`, pageWidth / 2, 30, { align: "center" });
+
+    doc.setFontSize(16);
+    doc.text(
+      `This is ${name}, a ${species ?? "mystery creature"} who lives here`,
+      pageWidth / 2,
+      45,
+      { align: "center" }
     );
 
-    console.log("TEST URL: ", qrCodeDataURL);
+    doc.setFontSize(14);
+    doc.text(
+      `Scan the QR code below to share a photo or see photos others took.`,
+      pageWidth / 2,
+      55,
+      { align: "center" }
+    );
 
-    // Add Animal Info
-    doc.setFontSize(28);
-    doc.text(`This is ${name}, the ${species}.`, 20, 20);
-    doc.setFontSize(20);
-    doc.text(`Have you seen this cat?`, 20, 30);
-    doc.text(`Use the QR code below to let it's owner know its ok!`, 20, 40);
+    // Animal Image
+    if (imageUrl) {
+      try {
+        const imageData = await fetch(
+          `https://ik.imagekit.io/assortfit/${imageUrl}`
+        )
+          .then((res) => res.blob())
+          .then((blob) => {
+            return new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.readAsDataURL(blob);
+            });
+          });
 
-    doc.text(`You can see other photos people have taken too!`, 20, 50);
+        doc.addImage(imageData, "JPEG", 55, 70, 100, 100);
+      } catch (err) {
+        console.error("Failed to load animal image", err);
+      }
+    }
 
-    // Add QR Code Image
-    doc.addImage(qrCodeDataURL, "PNG", 20, 50, 100, 100);
+    // QR Code
+    try {
+      const qrCodeDataURL = await QRCode.toDataURL(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/cats/${id}`
+      );
+      doc.addImage(qrCodeDataURL, "PNG", 80, 180, 50, 50);
+    } catch (err) {
+      console.error("Failed to generate QR code", err);
+    }
 
-    // Save the PDF
-    doc.save(`${animal.name}-do_you_see_my_cat.pdf`);
+    doc.save(`${name}-do_you_see_my_cat.pdf`);
   };
 
   return <Button onClick={generatePDF}>Generate QR code PDF</Button>;
