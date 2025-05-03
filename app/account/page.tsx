@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { AnimalCard } from "@/components/AnimalCard";
 import CreateAnimal from "@/components/CreateAnimal";
+import { DeleteButton } from "@/components/DeleteButton";
 import { GeneratePDF } from "@/components/GeneratePDF";
 import HowItWorks from "@/components/HowItWorks";
 import { SignOut } from "@/components/SignOut";
@@ -48,12 +49,14 @@ const Account = async () => {
         </div>
         <p className="text-3xl font-bold text-center">My Animals</p>
         <div className="flex items-center justify-center flex-col md:flex-row gap-8">
-          {pets.map((animal) => (
-            <div key={animal.id} className="flex flex-col space-y-4">
-              <AnimalCard animal={animal} />
+          {pets.map((pet) => (
+            <div key={pet.id} className="flex flex-col space-y-4">
+              <AnimalCard animal={pet} />
 
-              <GeneratePDF animal={animal} />
-              <CreateAnimal animal={animal} user={user} />
+              <GeneratePDF animal={pet} />
+              <CreateAnimal animal={pet} user={user} />
+
+              <DeleteButton id={pet.id} type="pets" />
             </div>
           ))}
         </div>
