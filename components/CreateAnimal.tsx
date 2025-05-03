@@ -110,15 +110,33 @@ const CreateAnimal = ({
         //
         // If creating
         //
+        const { name, species, age, description } = values;
+
         let databaseUser = await getUserByEmail(user.email);
 
         if (!databaseUser) {
           const newUser = await addUserToDB(user);
           databaseUser = newUser;
         }
+        // const newAnimal = await addAnimalToDB(values, databaseUser.id);
+        //
+        const userId = databaseUser.id;
+        // Create pet //
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/pets`,
+          {
+            method: "POST",
+            body: JSON.stringify({ name, species, age, description, userId }),
+            headers: { "Content-Type": "application/json" },
+          }
+        );
 
-        const newAnimal = await addAnimalToDB(values, databaseUser.id);
+        if (!res.ok) {
+          console.error("Failed to create pet", await res.text());
+          return;
+        }
 
+        const newAnimal = await res.json();
         const uploadedImage = await uploadToImagekit(
           values.image,
           `pets/${newAnimal.id}`
