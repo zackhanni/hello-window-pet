@@ -17,19 +17,6 @@ export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({ where: { email: email } });
 }
 
-export async function getUserPetsByEmail(user: SessionUser) {
-  let databaseUser = await getUserByEmail(user.email);
-  if (!databaseUser) {
-    try {
-      const newUser = addUserToDB(user);
-      databaseUser = newUser;
-    } catch (error) {
-      throw new Error(`User with email ${user.email} not found: `, error);
-    }
-  }
-  return await prisma.pet.findMany({ where: { userId: databaseUser.id } });
-}
-
 export async function addUserToDB(user: SessionUser) {
   const { email, name } = user;
 
@@ -45,6 +32,19 @@ export async function addUserToDB(user: SessionUser) {
 //
 // Animal related
 //
+
+export async function getUserPetsByEmail(user: SessionUser) {
+  let databaseUser = await getUserByEmail(user.email);
+  if (!databaseUser) {
+    try {
+      const newUser = addUserToDB(user);
+      databaseUser = newUser;
+    } catch (error) {
+      throw new Error(`User with email ${user.email} not found: `, error);
+    }
+  }
+  return await prisma.pet.findMany({ where: { userId: databaseUser.id } });
+}
 
 export async function getCatById(id: string) {
   return await prisma.pet.findUnique({ where: { id: id } });

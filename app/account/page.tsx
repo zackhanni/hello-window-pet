@@ -5,23 +5,24 @@ import { DeleteButton } from "@/components/DeleteButton";
 import { GeneratePDF } from "@/components/GeneratePDF";
 import HowItWorks from "@/components/HowItWorks";
 import { SignOut } from "@/components/SignOut";
-import { getUserPetsByEmail } from "@/lib/cats";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import React from "react";
 
 const Account = async () => {
   const session = await auth();
-  //   function handleDelete(id: string) {
-  //     // delete listing
-  //     console.log("Delete cat id: ", id);
-  //   }
-
   if (!session?.user?.email) redirect("/");
 
   const sessionUser = session?.user;
   console.log(sessionUser);
-  const pets = await getUserPetsByEmail(sessionUser);
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/getUserPets/${session.user.email}`,
+    {
+      method: "GET",
+    }
+  );
+  const pets = await res.json();
 
   return (
     <main className="py-8 space-y-8">
