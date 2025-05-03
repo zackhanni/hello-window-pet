@@ -1,6 +1,5 @@
 "use server"; // does this fix the wierd issues?
 
-import { User } from "@prisma/client";
 import imagekit from "./imagekit";
 import { prisma } from "@/lib/prisma";
 
@@ -18,7 +17,7 @@ export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({ where: { email: email } });
 }
 
-export async function getUserPetsByEmail(user: User) {
+export async function getUserPetsByEmail(user: SessionUser) {
   let databaseUser = await getUserByEmail(user.email);
   if (!databaseUser) {
     try {
@@ -31,7 +30,7 @@ export async function getUserPetsByEmail(user: User) {
   return await prisma.pet.findMany({ where: { userId: databaseUser.id } });
 }
 
-export async function addUserToDB(user: User) {
+export async function addUserToDB(user: SessionUser) {
   const { email, name } = user;
 
   const newUser = await prisma.user.create({

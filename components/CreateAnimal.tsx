@@ -43,18 +43,8 @@ const CreateAnimal = ({
   user,
   animal,
 }: {
-  user: {
-    name: string;
-    email: string;
-  };
-  animal?: {
-    id: string;
-    name: string;
-    description: string;
-    species: string;
-    age: number;
-    imageUrl: string;
-  };
+  user: SessionUser;
+  animal?: Animal;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);

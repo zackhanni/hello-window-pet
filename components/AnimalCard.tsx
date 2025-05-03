@@ -12,16 +12,16 @@ import { Image, ImageKitProvider } from "@imagekit/next";
 import Link from "next/link";
 import React from "react";
 
-interface Animal {
-  name: string;
-  id: string;
-  userId: string;
-  description: string | null;
-  species: string | null;
-  age: number | null;
-  imageUrl: string | null; // Make this optional
-  createdAt: Date;
-}
+// interface Animal {
+//   name: string;
+//   id: string;
+//   userId: string;
+//   description: string | null;
+//   species: string | null;
+//   age: number | null;
+//   imageUrl: string | null; // Make this optional
+//   createdAt: Date;
+// }
 
 export const AnimalCard = async ({ animal }: { animal: Animal }) => {
   const photos = await getAnimalPhotos(animal.id);

@@ -19,9 +19,9 @@ const Account = async () => {
 
   if (!session?.user?.email) redirect("/");
 
-  const user = session?.user;
-
-  const pets = await getUserPetsByEmail(session.user);
+  const sessionUser = session?.user;
+  console.log(sessionUser);
+  const pets = await getUserPetsByEmail(sessionUser);
 
   return (
     <main className="py-8 space-y-8">
@@ -47,7 +47,7 @@ const Account = async () => {
       <hr />
       <section className="flex flex-col justify-center space-y-4">
         <div className="flex justify-center">
-          <CreateAnimal user={user} />
+          <CreateAnimal user={sessionUser} />
         </div>
         <p className="text-3xl font-bold text-center">My Animals</p>
         <div className="flex items-center justify-center flex-col md:flex-row gap-8">
@@ -56,7 +56,7 @@ const Account = async () => {
               <AnimalCard animal={pet} />
 
               <GeneratePDF animal={pet} />
-              <CreateAnimal animal={pet} user={user} />
+              <CreateAnimal animal={pet} user={sessionUser} />
 
               <DeleteButton id={pet.id} type="pets" />
             </div>
