@@ -38,7 +38,7 @@ export default async function CatPage({ params }: PageProps) {
 
           <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
             <Image
-              src={cat.imageUrl ?? "/default-image.jpg"}
+              src={cat.imageUrl ?? "pets/default-image.jpg"}
               width={300}
               height={300}
               alt={cat.name}
@@ -53,7 +53,7 @@ export default async function CatPage({ params }: PageProps) {
           <p className="pb-8">
             Upload a photo to let the owner know they are ok!
           </p>
-          <UploadButton catId={cat.id} />
+          <UploadButton animalId={cat.id} />
         </div>
       </section>
       <section>

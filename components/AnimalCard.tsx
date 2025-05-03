@@ -39,7 +39,7 @@ export const AnimalCard = async ({ animal }: { animal: Animal }) => {
       <CardContent className="grid gap-4">
         <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
           <Image
-            src={imageUrl ?? "/default-image.jpg"}
+            src={imageUrl ?? "pets/default-image.jpg"}
             width={300}
             height={300}
             alt={name}

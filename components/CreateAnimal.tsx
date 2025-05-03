@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "./ui/button";
-import { Plus, UploadIcon } from "lucide-react";
+import { Plus } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -56,19 +56,29 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
 
-    // get user Id
-    // const user = await getUserByEmail(userEmail);
-    //  add animal to db
-    // const result = await AddAnimalToDB(values, user.id);
-
     try {
+      //
+      // get user Id
+      const user = await getUserByEmail(userEmail);
+      // const userId = "cma2wd242000049ge1lt670ec";
+      //  add animal to db
+
+      console.log(values);
+      const result = await AddAnimalToDB(values, user?.id);
+      // get animal id for next step
+      //
+
+      console.log("Added animal to db - ", result);
+
       const animalId = "cma2wd242000149ge42q7ui59";
       const uploadedImage = await uploadToImagekit(
         values.image,
         `pets/${animalId}`
       );
-
       console.log("Uploaded to ImageKit!", uploadedImage);
+
+      // replace placeholder cat image with uploaded image
+
       alert("Upload successful!");
       setSubmitSuccess(true);
     } catch (error) {

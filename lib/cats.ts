@@ -1,3 +1,5 @@
+"use server"; // does this fix the wierd issues?
+
 import imagekit from "./imagekit";
 import { prisma } from "@/lib/prisma";
 
@@ -53,3 +55,35 @@ export const getAnimalPhotos = async (AnimalId: string) => {
     return [];
   }
 };
+
+//
+//
+//
+
+interface Animal {
+  name: string;
+  id: string;
+  userId: string;
+  description: string | null;
+  species: string | null;
+  age: number | null;
+  imageUrl: string | null; // Make this optional
+  createdAt: Date;
+}
+
+export async function AddAnimalToDB(animalData: Animal, userId: string) {
+  console.log("cats animal data: ", animalData);
+  console.log("cats userId: ", userId);
+  const { name, description, species, age } = animalData;
+
+  return await prisma.pet.create({
+    data: {
+      userId: userId,
+      name: name,
+      description: description,
+      species: species,
+      age: age,
+      imageUrl: null,
+    },
+  });
+}
