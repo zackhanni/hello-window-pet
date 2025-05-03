@@ -71,7 +71,7 @@ interface Animal {
   createdAt: Date;
 }
 
-export async function AddAnimalToDB(animalData: Animal, userId: string) {
+export async function addAnimalToDB(animalData: Animal, userId: string) {
   console.log("cats animal data: ", animalData);
   console.log("cats userId: ", userId);
   const { name, description, species, age } = animalData;
@@ -90,7 +90,7 @@ export async function AddAnimalToDB(animalData: Animal, userId: string) {
   return newAnimal;
 }
 
-export async function ChangeAnimalImage(animalId: string, imageUrl: string) {
+export async function changeAnimalImage(animalId: string, imageUrl: string) {
   const updatedAnimal = await prisma.pet.update({
     where: {
       id: animalId,

@@ -29,7 +29,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import Link from "next/link";
 import {
+  addAnimalToDB,
   AddAnimalToDB,
+  changeAnimalImage,
   ChangeAnimalImage,
   getUserByEmail,
   userExists,
@@ -64,7 +66,7 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
     try {
       const user = await getUserByEmail(userEmail);
 
-      const newAnimal = await AddAnimalToDB(values, user?.id);
+      const newAnimal = await addAnimalToDB(values, user?.id);
 
       const uploadedImage = await uploadToImagekit(
         values.image,
@@ -72,7 +74,7 @@ const CreateAnimal = ({ userEmail }: { userEmail: string }) => {
       );
       console.log("Uploaded to ImageKit!", uploadedImage);
 
-      await ChangeAnimalImage(newAnimal.id, uploadedImage.filePath);
+      await changeAnimalImage(newAnimal.id, uploadedImage.filePath);
 
       alert("Upload successful!");
       setSubmitSuccess(true);
