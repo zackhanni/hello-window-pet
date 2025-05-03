@@ -20,6 +20,7 @@ export async function DELETE(
     await prisma.user.delete({ where: { email: params.email } });
     return NextResponse.json({ message: "User deleted" });
   } catch (err) {
+    console.log("Error feleting user:", err);
     return NextResponse.json(
       { error: "Failed to delete user" },
       { status: 500 }

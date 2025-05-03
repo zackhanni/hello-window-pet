@@ -1,4 +1,4 @@
-import { UploadButton } from "@/components/uploadButton";
+import { UploadButton } from "@/components/UploadButton";
 import { getCatById, getAnimalPhotos } from "@/lib/cats";
 import { Image, ImageKitProvider } from "@imagekit/next";
 
@@ -26,7 +26,9 @@ export default async function CatPage({ params }: PageProps) {
     );
 
   const photos = await getAnimalPhotos(params.id);
-  // console.log(photos);
+  const sortedPhotos = photos.sort((a, b) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
 
   return (
     <main className="space-y-8 py-8">
@@ -66,7 +68,7 @@ export default async function CatPage({ params }: PageProps) {
 
           {photos ? (
             <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
-              {photos.map((photo) => (
+              {sortedPhotos.map((photo) => (
                 <div key={photo.fileId} className="flex flex-col items-center">
                   <p>Taken {photo.createdAt}</p>
                   <Image

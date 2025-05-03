@@ -31,6 +31,7 @@ export async function DELETE(
     await prisma.pet.delete({ where: { id: params.id } });
     return NextResponse.json({ message: "Pet deleted" });
   } catch (err) {
+    console.log("Error feleting pet:", err);
     return NextResponse.json(
       { error: "Failed to delete pet" },
       { status: 500 }

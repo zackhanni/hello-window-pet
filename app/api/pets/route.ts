@@ -4,7 +4,15 @@ import { NextResponse } from "next/server";
 
 // get all animals
 export async function GET() {
-  const pets = await prisma.pet.findMany();
+  const pets = await prisma.pet.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    skip: 0, // for pagination
+    take: 10,
+  });
+
+  // sort in reverse
   return NextResponse.json(pets);
 }
 

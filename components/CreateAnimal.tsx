@@ -28,13 +28,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import Link from "next/link";
-import {
-  addAnimalToDB,
-  addUserToDB,
-  changeAnimalImage,
-  getUserByEmail,
-  updateAnimal,
-} from "@/lib/cats";
+import { changeAnimalImage } from "@/lib/cats";
 import { uploadToImagekit } from "./UploadToImagekit";
 
 const formSchema = z.object({
@@ -112,14 +106,33 @@ const CreateAnimal = ({
         //
         const { name, species, age, description } = values;
 
-        let databaseUser = await getUserByEmail(user.email);
+        const userRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/users/${user.email}`,
+          {
+            method: "GET",
+          }
+        );
+        if (!userRes.ok) {
+          console.error("Failed to create user", await userRes.text());
+          return;
+        }
+        let databaseUser = await userRes.json();
 
         if (!databaseUser) {
-          const newUser = await addUserToDB(user);
-          databaseUser = newUser;
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/users`,
+            {
+              method: "POST",
+              body: JSON.stringify({ name: user.name, email: user.email }),
+              headers: { "Content-Type": "application/json" },
+            }
+          );
+          if (!res.ok) {
+            console.error("Failed to create user", await res.text());
+            return;
+          }
+          databaseUser = await res.json();
         }
-        // const newAnimal = await addAnimalToDB(values, databaseUser.id);
-        //
         const userId = databaseUser.id;
         // Create pet //
         const res = await fetch(

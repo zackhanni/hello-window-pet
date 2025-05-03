@@ -38,6 +38,8 @@ const Account = async () => {
           <p>{session.user.name}</p>
           <p className="pb-2">{session.user.email}</p>
           <SignOut />
+          {/* need to get database user id first to do this */}
+          {/* {user.id && <DeleteButton id={user.id} type="users" />} */}
         </div>
       </section>
       <hr />
