@@ -9,7 +9,7 @@ const Navigation = ({ session }: { session: Session }) => {
           <Link href={"/"}>Home</Link>
         </li>
         <li className={`p-4 hover:underline`}>
-          <Link href={"/cats"}>All cats</Link>
+          <Link href={"/pets"}>All pets</Link>
         </li>
         {session?.user ? (
           <li className={`p-4 hover:underline`}>

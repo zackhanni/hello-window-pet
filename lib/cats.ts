@@ -58,10 +58,10 @@ function convertFromZuluTime(zuluString: string) {
   return new Date(zuluString);
 }
 
-export const getAnimalPhotos = async (AnimalId: string) => {
+export const getAnimalPhotos = async (petId: string) => {
   try {
     const result = await imagekit.listFiles({
-      path: `pets/${AnimalId}`,
+      path: `pets/${petId}`,
     });
 
     return result.map((file) => {
@@ -80,40 +80,11 @@ export const getAnimalPhotos = async (AnimalId: string) => {
     return [];
   }
 };
-// interface Animal {
-//   name: string;
-//   id: string;
-//   userId: string;
-//   description: string | null;
-//   species: string | null;
-//   age: number | null;
-//   imageUrl: string | null; // Make this optional
-//   createdAt: Date;
-// }
 
-// export async function addAnimalToDB(animalData: Animal, userId: string) {
-//   console.log("cats animal data: ", animalData);
-//   console.log("cats userId: ", userId);
-//   const { name, description, species, age } = animalData;
-
-//   const newAnimal = await prisma.pet.create({
-//     data: {
-//       userId: userId,
-//       name: name,
-//       description: description,
-//       species: species,
-//       age: age,
-//       imageUrl: null,
-//     },
-//   });
-
-//   return newAnimal;
-// }
-
-export async function changeAnimalImage(animalId: string, imageUrl: string) {
+export async function changeAnimalImage(petId: string, imageUrl: string) {
   const updatedAnimal = await prisma.pet.update({
     where: {
-      id: animalId,
+      id: petId,
     },
     data: {
       imageUrl: imageUrl,
@@ -123,12 +94,12 @@ export async function changeAnimalImage(animalId: string, imageUrl: string) {
   return updatedAnimal;
 }
 
-export async function updateAnimal(animalId, updatedAnimalData) {
+export async function updateAnimal(petId: string, updatedAnimalData: Pet) {
   const { name, description, species, age, imageUrl } = updatedAnimalData;
 
   const updatedAnimal = await prisma.pet.update({
     where: {
-      id: animalId,
+      id: petId,
     },
     data: {
       name: name,

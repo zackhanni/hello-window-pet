@@ -1,29 +1,13 @@
-// components/GenerateAnimalPDF.tsx
 "use client";
 
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 import { Button } from "./ui/button";
 
-// interface Animal {
-//   name: string;
-//   id: string;
-//   userId: string;
-//   description: string | null;
-//   species: string | null;
-//   age: number | null;
-//   imageUrl: string | null;
-//   createdAt: Date;
-// }
-
-interface Props {
-  animal: Animal;
-}
-
-export const GeneratePDF = ({ animal }: Props) => {
+export const GeneratePDF = ({ pet }: { pet: Pet }) => {
   const generatePDF = async () => {
     const doc = new jsPDF();
-    const { id, name, imageUrl, species } = animal;
+    const { id, name, imageUrl, species } = pet;
 
     const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -47,7 +31,7 @@ export const GeneratePDF = ({ animal }: Props) => {
       { align: "center" }
     );
 
-    // Animal Image
+    // Pet Image
     if (imageUrl) {
       try {
         const imageData = await fetch(
@@ -64,14 +48,14 @@ export const GeneratePDF = ({ animal }: Props) => {
 
         doc.addImage(imageData, "JPEG", 55, 70, 100, 100);
       } catch (err) {
-        console.error("Failed to load animal image", err);
+        console.error("Failed to load pet image", err);
       }
     }
 
     // QR Code
     try {
       const qrCodeDataURL = await QRCode.toDataURL(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/cats/${id}`
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/pets/${id}`
       );
       doc.addImage(qrCodeDataURL, "PNG", 80, 180, 50, 50);
     } catch (err) {

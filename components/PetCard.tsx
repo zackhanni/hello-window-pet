@@ -23,10 +23,10 @@ import React from "react";
 //   createdAt: Date;
 // }
 
-export const AnimalCard = async ({ animal }: { animal: Animal }) => {
-  const photos = await getAnimalPhotos(animal.id);
+export const PetCard = async ({ pet }: { pet: Pet }) => {
+  const photos = await getAnimalPhotos(pet.id);
 
-  const { id, name, species, imageUrl, description } = animal;
+  const { id, name, species, imageUrl, description } = pet;
 
   return (
     <Card className="flex flex-col items-center justify-center max-w-md">
@@ -48,7 +48,7 @@ export const AnimalCard = async ({ animal }: { animal: Animal }) => {
         </ImageKitProvider>
       </CardContent>
       <CardFooter className="w-full">
-        <Link href={`/cats/${id}`} className="w-full">
+        <Link href={`/pets/${id}`} className="w-full">
           <Button className="w-full">Visit this {species}!</Button>
         </Link>
       </CardFooter>

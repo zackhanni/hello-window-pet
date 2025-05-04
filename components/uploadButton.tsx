@@ -35,7 +35,7 @@ const formSchema = z.object({
   name: z.string().max(100).optional(),
 });
 
-export const UploadButton = ({ animalId }: { animalId: string }) => {
+export const UploadButton = ({ PetId }: { PetId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,7 +53,7 @@ export const UploadButton = ({ animalId }: { animalId: string }) => {
     try {
       const result = await uploadToImagekit(
         values.image,
-        `pets/${animalId}` // if you want to edit the naming scheme later. this is it
+        `pets/${PetId}` // if you want to edit the naming scheme later. this is it
       );
 
       if (result.ok) {

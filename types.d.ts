@@ -10,10 +10,10 @@ interface DatabaseUser {
   name?: string;
   image?: string;
   city?: string;
-  pets: Animal[];
+  pets: Pet[];
 }
 
-interface Animal {
+interface Pet {
   id: string;
   name: string;
   description: string;

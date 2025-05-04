@@ -39,21 +39,15 @@ const formSchema = z.object({
   image: z.any(),
 });
 
-const CreateAnimal = ({
-  user,
-  animal,
-}: {
-  user: SessionUser;
-  animal?: Animal;
-}) => {
+const CreatePet = ({ user, pet }: { user: SessionUser; pet?: Pet }) => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: animal?.name || "",
-      description: animal?.description || "",
-      species: animal?.species || "",
-      age: animal?.age || 0,
+      name: pet?.name || "",
+      description: pet?.description || "",
+      species: pet?.species || "",
+      age: pet?.age || 0,
       image: null,
     },
   });
@@ -63,21 +57,21 @@ const CreateAnimal = ({
     setIsLoading(true);
 
     try {
-      if (animal) {
+      if (pet) {
         //
         // If editing
         //
-        let imageUrl = animal.imageUrl;
+        let imageUrl = pet.imageUrl;
         if (values.image) {
           const uploadedImage = await uploadToImagekit(
             values.image,
-            `pets/${animal.id}`
+            `pets/${pet.id}`
           );
           imageUrl = uploadedImage.filePath;
         }
 
         // Update pet
-        const result = await fetch(`/api/pets/${animal.id}`, {
+        const result = await fetch(`/api/pets/${pet.id}`, {
           method: "PUT",
           body: JSON.stringify({
             name: values.name,
@@ -167,19 +161,15 @@ const CreateAnimal = ({
       <Dialog>
         <Button asChild>
           <DialogTrigger>
-            {animal ? "Update animal" : "Add new animal"}
-            {!animal && <Plus />}
+            {pet ? "Update pet" : "Add new pet"}
+            {!pet && <Plus />}
           </DialogTrigger>
         </Button>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>
-              {animal ? "Edit animal" : "New animal form"}
-            </DialogTitle>
+            <DialogTitle>{pet ? "Edit pet" : "New pet form"}</DialogTitle>
             <DialogDescription>
-              {animal
-                ? "Update your pet's info."
-                : "Add details about your pet."}
+              {pet ? "Update your pet's info." : "Add details about your pet."}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -305,12 +295,12 @@ const CreateAnimal = ({
                 type="submit"
                 disabled={
                   isLoading ||
-                  (!form.watch("image") && !animal) ||
+                  (!form.watch("image") && !pet) ||
                   !form.watch("name")
                 }
                 className="w-full"
               >
-                {animal ? "Save Changes" : "Submit"}
+                {pet ? "Save Changes" : "Submit"}
               </Button>
             </DialogClose>
             <DialogFooter className="sm:justify-start">
@@ -327,4 +317,4 @@ const CreateAnimal = ({
   );
 };
 
-export default CreateAnimal;
+export default CreatePet;

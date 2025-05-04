@@ -2,7 +2,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-// get all animals
 export async function GET() {
   const pets = await prisma.pet.findMany({
     orderBy: {
@@ -16,7 +15,6 @@ export async function GET() {
   return NextResponse.json(pets);
 }
 
-// add animal to DB
 export async function POST(req: Request) {
   const { userId, name, description, species, age } = await req.json();
   const newPet = await prisma.pet.create({

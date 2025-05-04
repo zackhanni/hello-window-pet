@@ -1,4 +1,4 @@
-import { AnimalCard } from "@/components/AnimalCard";
+import { PetCard } from "@/components/PetCard";
 import { Pet } from "@prisma/client";
 import React from "react";
 
@@ -16,7 +16,7 @@ const page = async () => {
       </h1>
       <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 place-items-center">
         {pets.map((pet: Pet) => (
-          <AnimalCard animal={pet} key={pet.id} />
+          <PetCard pet={pet} key={pet.id} />
         ))}
       </section>
     </main>
