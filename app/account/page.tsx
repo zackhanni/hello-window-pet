@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import { AnimalCard } from "@/components/AnimalCard";
-import CreateAnimal from "@/components/CreateAnimal";
+import { PetCard } from "@/components/PetCard";
+import CreatePet from "@/components/CreatePet";
 import { DeleteButton } from "@/components/DeleteButton";
 import { GeneratePDF } from "@/components/GeneratePDF";
 import HowItWorks from "@/components/HowItWorks";
@@ -14,7 +14,6 @@ const Account = async () => {
   if (!session?.user?.email) redirect("/");
 
   const sessionUser = session?.user;
-  console.log(sessionUser);
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/getUserPets/${session.user.email}`,
@@ -48,16 +47,16 @@ const Account = async () => {
       <hr />
       <section className="flex flex-col justify-center space-y-4">
         <div className="flex justify-center">
-          <CreateAnimal user={sessionUser} />
+          <CreatePet user={sessionUser} />
         </div>
-        <p className="text-3xl font-bold text-center">My Animals</p>
+        <p className="text-3xl font-bold text-center">My Pets</p>
         <div className="flex items-center justify-center flex-col md:flex-row gap-8">
-          {pets.map((pet) => (
+          {pets.map((pet: Pet) => (
             <div key={pet.id} className="flex flex-col space-y-4">
-              <AnimalCard animal={pet} />
+              <PetCard pet={pet} />
 
-              <GeneratePDF animal={pet} />
-              <CreateAnimal animal={pet} user={sessionUser} />
+              <GeneratePDF pet={pet} />
+              <CreatePet pet={pet} user={sessionUser} />
 
               <DeleteButton id={pet.id} type="pets" />
             </div>
