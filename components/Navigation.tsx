@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const Navigation = ({ session }: { session: Session }) => {
   return (
-    <nav className="sticky top-0 bg-black text-white">
+    <nav className="sticky top-0 bg-primary">
       <ul className="flex items-center justify-center">
         <li className={`p-4 hover:underline`}>
           <Link href={"/"}>Home</Link>

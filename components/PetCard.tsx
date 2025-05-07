@@ -47,9 +47,9 @@ export const PetCard = async ({ pet }: { pet: Pet }) => {
           />
         </ImageKitProvider>
       </CardContent>
-      <CardFooter className="w-full">
+      <CardFooter className="w-full ">
         <Link href={`/pets/${id}`} className="w-full">
-          <Button className="w-full">Visit this {species}!</Button>
+          <Button variant={"secondary"}>Visit this {species}!</Button>
         </Link>
       </CardFooter>
     </Card>

@@ -49,13 +49,13 @@ export default async function CatPage({ params }: PageProps) {
           </ImageKitProvider>
         </div>
       </section>
-      <section className="bg-blue-100 py-8">
+      <section className="bg-secondary py-8">
         <div className="flex items-center flex-col">
           <p>Have you seen this cat?</p>
           <p className="pb-8">
             Upload a photo to let the owner know they are ok!
           </p>
-          <UploadButton animalId={cat.id} />
+          <UploadButton petId={cat.id} />
         </div>
       </section>
       <section>

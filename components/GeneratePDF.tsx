@@ -65,5 +65,9 @@ export const GeneratePDF = ({ pet }: { pet: Pet }) => {
     doc.save(`${name}-do_you_see_my_cat.pdf`);
   };
 
-  return <Button onClick={generatePDF}>Generate QR code PDF</Button>;
+  return (
+    <Button variant={"secondary"} onClick={generatePDF}>
+      Generate QR code PDF
+    </Button>
+  );
 };

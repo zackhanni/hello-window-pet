@@ -159,7 +159,7 @@ const CreatePet = ({ user, pet }: { user: SessionUser; pet?: Pet }) => {
   return (
     <Form {...form}>
       <Dialog>
-        <Button asChild>
+        <Button variant={"secondary"} asChild>
           <DialogTrigger>
             {pet ? "Update pet" : "Add new pet"}
             {!pet && <Plus />}
