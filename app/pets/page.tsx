@@ -1,5 +1,4 @@
 import { PetCard } from "@/components/PetCard";
-import { Pet } from "@prisma/client";
 import React from "react";
 
 const page = async () => {

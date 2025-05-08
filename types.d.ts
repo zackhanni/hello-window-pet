@@ -15,9 +15,11 @@ interface DatabaseUser {
 
 interface Pet {
   id: string;
+  userId: string;
   name: string;
-  description: string;
-  species: string;
-  age: number;
+  description?: string;
+  species?: string;
+  age?: number;
   imageUrl: string;
+  createdAt: Date;
 }
