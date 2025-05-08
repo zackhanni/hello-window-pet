@@ -30,6 +30,7 @@ import { Input } from "./ui/input";
 import { changeAnimalImage } from "@/lib/cats";
 import { uploadToImagekit } from "./UploadToImagekit";
 import { useRouter } from "next/navigation";
+import { useUserData } from "@/contexts/UserDataContext";
 
 const formSchema = z.object({
   name: z.string().max(100),
@@ -39,7 +40,7 @@ const formSchema = z.object({
   image: z.any(),
 });
 
-const CreatePet = ({ user, pet }: { user: SessionUser; pet?: Pet }) => {
+const CreatePet = ({ pet }: { pet?: Pet }) => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,6 +53,7 @@ const CreatePet = ({ user, pet }: { user: SessionUser; pet?: Pet }) => {
     },
   });
   const router = useRouter();
+  const { databaseUser } = useUserData();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -91,35 +93,7 @@ const CreatePet = ({ user, pet }: { user: SessionUser; pet?: Pet }) => {
         // If creating
         //
         const { name, species, age, description } = values;
-
-        const userRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/users/${user.email}`,
-          {
-            method: "GET",
-          }
-        );
-        if (!userRes.ok) {
-          console.error("Failed to create user", await userRes.text());
-          return;
-        }
-        let databaseUser = await userRes.json();
-
-        if (!databaseUser) {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/users`,
-            {
-              method: "POST",
-              body: JSON.stringify({ name: user.name, email: user.email }),
-              headers: { "Content-Type": "application/json" },
-            }
-          );
-          if (!res.ok) {
-            console.error("Failed to create user", await res.text());
-            return;
-          }
-          databaseUser = await res.json();
-        }
-        const userId = databaseUser.id;
+        const userId = databaseUser?.id;
         // Create pet //
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/pets`,

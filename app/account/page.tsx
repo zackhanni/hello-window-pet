@@ -13,8 +13,6 @@ const Account = async () => {
   const session = await auth();
   if (!session?.user?.email) redirect("/");
 
-  const sessionUser = session?.user;
-
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/getUserPets/${session.user.email}`,
     {
@@ -47,7 +45,7 @@ const Account = async () => {
       <hr />
       <section className="flex flex-col justify-center space-y-4">
         <div className="flex justify-center">
-          <CreatePet user={sessionUser} />
+          <CreatePet />
         </div>
         <p className="text-3xl font-bold text-center">My Pets</p>
         <div className="flex items-center justify-center flex-col md:flex-row gap-8">
@@ -56,7 +54,7 @@ const Account = async () => {
               <PetCard pet={pet} />
 
               <GeneratePDF pet={pet} />
-              <CreatePet pet={pet} user={sessionUser} />
+              <CreatePet pet={pet} />
 
               <DeleteButton id={pet.id} type="pets" />
             </div>
