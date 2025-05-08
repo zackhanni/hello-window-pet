@@ -6,11 +6,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface UserDataContextType {
   loading: boolean;
   databaseUser: DatabaseUser | null;
+  userPets: Pet | null;
 }
 
 const UserDataContext = createContext<UserDataContextType>({
   loading: true,
   databaseUser: null,
+  userPets: null,
 });
 
 export const useUserData = () => useContext(UserDataContext);
@@ -23,6 +25,7 @@ export const UserDataProvider = ({
   session: Session;
 }) => {
   const [databaseUser, setDatabaseUser] = useState<DatabaseUser | null>(null);
+  const [userPets, setUserPets] = useState<Pet | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -75,8 +78,30 @@ export const UserDataProvider = ({
     fetchDatabaseUserData();
   }, [session]);
 
+  useEffect(() => {
+    const fetchUserAnimals = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/users/user/${databaseUser?.id}/pets`,
+          {
+            method: "GET",
+          }
+        );
+        const pets = await res.json();
+        setUserPets(pets);
+      } catch (error) {
+        console.error(
+          "An error occurred while fetching user user pets:",
+          error
+        );
+      }
+    };
+
+    fetchUserAnimals();
+  }, [databaseUser]);
+
   return (
-    <UserDataContext.Provider value={{ databaseUser, loading }}>
+    <UserDataContext.Provider value={{ databaseUser, userPets, loading }}>
       {children}
     </UserDataContext.Provider>
   );
