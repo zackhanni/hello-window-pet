@@ -1,6 +1,4 @@
 import { auth } from "@/auth";
-
-import HowItWorks from "@/components/HowItWorks";
 import { SignOut } from "@/components/SignOut";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -20,6 +18,7 @@ const Account = async () => {
               height={50}
               width={50}
               alt={"profile image"}
+              className="rounded-full"
             />
           )}
           <p>{session.user.name}</p>
@@ -29,8 +28,6 @@ const Account = async () => {
           {/* {user.id && <DeleteButton id={user.id} type="users" />} */}
         </div>
       </section>
-      <hr />
-      <HowItWorks />
       <hr />
       <SectionUserPets />
     </main>
