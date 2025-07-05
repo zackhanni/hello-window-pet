@@ -20,6 +20,7 @@ export default async function CatPage({ params }: PageProps) {
         <Image
           src={"/cats/buddy.jpg"}
           alt={"Buddy the cat"}
+          priority
           width={200}
           height={200}
         />
