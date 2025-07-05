@@ -17,9 +17,9 @@ export const SectionUserPets = ({ user }: { user: string }) => {
       <p className="text-center">{user}&apos;s Pets</p>
       <div className="flex items-center justify-center flex-col md:flex-row gap-8">
         {userPets &&
-          userPets.map((pet: Pet) => (
+          userPets.map((pet: Pet, index: number) => (
             <div key={pet.id} className="flex flex-col space-y-4">
-              <PetCard pet={pet} />
+              <PetCard pet={pet} index={index} />
               <GeneratePDF pet={pet} />
               <CreatePet pet={pet} />
               <DeleteButton id={pet.id} type="pets" />

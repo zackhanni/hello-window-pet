@@ -11,7 +11,7 @@ import { Image, ImageKitProvider } from "@imagekit/next";
 import Link from "next/link";
 import React from "react";
 
-export const PetCard = ({ pet }: { pet: Pet }) => {
+export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
   const { id, name, species, imageUrl, description } = pet;
 
   return (
@@ -24,6 +24,7 @@ export const PetCard = ({ pet }: { pet: Pet }) => {
         <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
           <Image
             src={imageUrl ?? "pets/default-image.jpg"}
+            priority={index === 0}
             width={300}
             height={300}
             alt={name}
