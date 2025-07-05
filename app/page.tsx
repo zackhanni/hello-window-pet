@@ -39,6 +39,9 @@ const Home = async () => {
           )}
         </div>
         <HowItWorks />
+        <div className="h-full">
+
+        </div>
       </main>
     </div>
   );
