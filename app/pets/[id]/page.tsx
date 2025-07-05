@@ -51,7 +51,7 @@ export default async function CatPage({ params }: PageProps) {
         </div>
       </section>
       <section className="bg-secondary py-8">
-        <div className="flex items-center flex-col">
+        <div className="flex items-center flex-col px-4">
           <p>Have you seen this cat?</p>
           <p className="pb-8">
             Upload a photo to let the owner know they are ok!
@@ -71,7 +71,7 @@ export default async function CatPage({ params }: PageProps) {
             <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
               {sortedPhotos.map((photo) => (
                 <div key={photo.fileId} className="flex flex-col items-center">
-                  <p>Taken {photo.createdAt}</p>
+                  <p className="px-8 pb-2 text-sm">Taken {photo.createdAt}</p>
                   <Image
                     src={photo.filePath}
                     width={300}

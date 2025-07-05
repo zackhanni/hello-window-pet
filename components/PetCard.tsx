@@ -15,7 +15,7 @@ export const PetCard = ({ pet }: { pet: Pet }) => {
   const { id, name, species, imageUrl, description } = pet;
 
   return (
-    <Card className="flex flex-col items-center justify-center max-w-md">
+    <Card className="flex flex-col items-center justify-center max-w-md border-4 border-secondary rounded-lg shadow-none">
       <CardHeader className="w-full">
         <CardTitle>{name}</CardTitle>
         <CardDescription>{description}</CardDescription>

@@ -21,7 +21,7 @@ const Account = async () => {
               className="rounded-full"
             />
           )}
-          <p>{session.user.name}</p>
+          <p className="text-3xl font-bold">{session.user.name}</p>
           <p className="pb-2">{session.user.email}</p>
           <SignOut />
           {/* need to get database user id first to do this */}
@@ -29,7 +29,7 @@ const Account = async () => {
         </div>
       </section>
       <hr />
-      <SectionUserPets />
+      <SectionUserPets user={session.user.name ?? ""} />
     </main>
   );
 };

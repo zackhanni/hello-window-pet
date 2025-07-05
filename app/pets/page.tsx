@@ -11,7 +11,7 @@ const page = async () => {
   return (
     <main className="py-8">
       <h1 className="text-center text-3xl font-bold pb-4">
-        Check out some recent cats!
+        All Pets
       </h1>
       <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 place-items-center">
         {pets.map((pet: Pet) => (
