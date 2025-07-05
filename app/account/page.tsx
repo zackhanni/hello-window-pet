@@ -17,6 +17,7 @@ const Account = async () => {
               src={session.user.image}
               height={50}
               width={50}
+              priority
               alt={"profile image"}
               className="rounded-full"
             />
