@@ -21,7 +21,7 @@ const Navigation = ({ session }: { session: Session | null }) => {
           </li>
         )}
         <li className={`p-4 hover:underline`}>
-          <Link href={"/"}>About</Link>
+          <Link href={"/about"}>About</Link>
         </li>
       </ul>
     </nav>
