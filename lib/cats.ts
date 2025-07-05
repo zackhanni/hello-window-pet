@@ -1,4 +1,4 @@
-"use server"; // does this fix the wierd issues?
+"use server"; // does this fix the weird issues?
 
 import imagekit from "./imagekit";
 import { prisma } from "@/lib/prisma";
@@ -37,10 +37,14 @@ export async function getUserPetsByEmail(user: SessionUser) {
   let databaseUser = await getUserByEmail(user.email);
   if (!databaseUser) {
     try {
-      const newUser = addUserToDB(user);
+      const newUser = await addUserToDB(user);
       databaseUser = newUser;
     } catch (error) {
-      throw new Error(`User with email ${user.email} not found: `, error);
+      throw new Error(
+        `User with email ${user.email} not found: ${
+          error instanceof Error ? error.message : String(error)
+        }`
+      );
     }
   }
   return await prisma.pet.findMany({ where: { userId: databaseUser.id } });
@@ -64,17 +68,26 @@ export const getAnimalPhotos = async (petId: string) => {
       path: `pets/${petId}`,
     });
 
-    return result.map((file) => {
-      // limit to only 10 images
-      // sort images by date. newest first
+    return result
+      .filter((file) => "filePath" in file && "fileId" in file)
+      .map(
+        (file: {
+          filePath: string;
+          fileId: string;
+          name: string;
+          createdAt: string;
+        }) => {
+          // limit to only 10 images
+          // sort images by date. newest first
 
-      return {
-        filePath: file.filePath,
-        fileId: file.fileId,
-        name: file.name,
-        createdAt: convertFromZuluTime(file.createdAt).toString(),
-      };
-    });
+          return {
+            filePath: file.filePath,
+            fileId: file.fileId,
+            name: file.name,
+            createdAt: convertFromZuluTime(file.createdAt).toString(),
+          };
+        }
+      );
   } catch (error) {
     console.error("Failed to fetch cat photos", error);
     return [];

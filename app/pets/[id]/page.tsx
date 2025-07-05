@@ -5,11 +5,12 @@ import { Image, ImageKitProvider } from "@imagekit/next";
 import React from "react";
 
 type PageProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function CatPage({ params }: PageProps) {
-  const cat = await getCatById(params.id);
+  const { id } = await params;
+  const cat = await getCatById(id);
 
   if (!cat)
     return (
@@ -25,7 +26,7 @@ export default async function CatPage({ params }: PageProps) {
       </div>
     );
 
-  const photos = await getAnimalPhotos(params.id);
+  const photos = await getAnimalPhotos(id);
   const sortedPhotos = photos.sort((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });

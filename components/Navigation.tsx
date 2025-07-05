@@ -1,7 +1,7 @@
 import { Session } from "next-auth";
 import Link from "next/link";
 
-const Navigation = ({ session }: { session: Session }) => {
+const Navigation = ({ session }: { session: Session | null }) => {
   return (
     <nav className="sticky top-0 bg-primary">
       <ul className="flex items-center justify-center">
