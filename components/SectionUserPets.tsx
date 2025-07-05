@@ -11,7 +11,7 @@ export const SectionUserPets = ({ user }: { user: string }) => {
   const { userPets } = useUserData();
   return (
     <section className="flex flex-col justify-center space-y-4">
-      <div className="flex justify-center">
+      <div className="flex justify-center max-w-md">
         <CreatePet />
       </div>
       <p className="text-center">{user}&apos;s Pets</p>

@@ -15,7 +15,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
   const { id, name, species, imageUrl, description } = pet;
 
   return (
-    <Card className="flex flex-col items-center justify-center max-w-md border-4 border-secondary rounded-lg shadow-none">
+    <Card className="flex flex-col items-center justify-center max-w-md bg-secondary border-none rounded-lg shadow-none">
       <CardHeader className="w-full">
         <CardTitle>{name}</CardTitle>
         <CardDescription>{description}</CardDescription>
@@ -28,13 +28,13 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
             width={300}
             height={300}
             alt={name}
-            className="max-h-[300px] object-cover"
+            className="max-h-[300px] object-cover rounded-lg"
           />
         </ImageKitProvider>
       </CardContent>
       <CardFooter className="w-full ">
         <Link href={`/pets/${id}`} className="w-full">
-          <Button variant={"secondary"}>Visit this {species}!</Button>
+          <Button variant={"accent"}>Visit this {species}!</Button>
         </Link>
       </CardFooter>
     </Card>

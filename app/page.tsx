@@ -26,7 +26,7 @@ const Home = async () => {
             : "Did you see a window pet?"}
         </p>
 
-        <div className="flex flex-col gap-4 border-4 border-secondary rounded-lg p-4">
+        <div className="flex flex-col gap-4 border-4 border-accent rounded-lg p-4">
           <p className="dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
             {session?.user
               ? "You can add, update, or remove any of your animal listings in your account settings."

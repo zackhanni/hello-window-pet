@@ -11,7 +11,7 @@ const AboutPage = () => {
                         About Window Pets
                     </h1>
 
-                    <div className="flex flex-col gap-8 border-4 border-secondary rounded-lg p-6">
+                    <div className="flex flex-col gap-8 bg-secondary rounded-lg p-6">
                         <div className="flex flex-col gap-4">
                             <h2 className="text-xl font-semibold flex items-center gap-2">
                                 <Cat className="h-6 w-6" />
