@@ -135,7 +135,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
       <Dialog>
         <Button variant={"secondary"} asChild>
           <DialogTrigger>
-            {pet ? "Update pet" : "Add new pet"}
+            {pet ? "Update pet details" : "Add new pet"}
             {!pet && <Plus />}
           </DialogTrigger>
         </Button>
@@ -267,6 +267,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
             <DialogClose asChild>
               <Button
                 type="submit"
+                variant={"accent"}
                 disabled={
                   isLoading ||
                   (!form.watch("image") && !pet) ||

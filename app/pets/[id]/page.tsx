@@ -23,6 +23,7 @@ export default async function CatPage({ params }: PageProps) {
           priority
           width={200}
           height={200}
+          className="rounded-lg"
         />
       </div>
     );
@@ -47,6 +48,7 @@ export default async function CatPage({ params }: PageProps) {
               height={300}
               alt={cat.name}
               priority
+              className="rounded-lg"
             />
           </ImageKitProvider>
         </div>
@@ -62,7 +64,7 @@ export default async function CatPage({ params }: PageProps) {
       </section>
       <section>
         <div className="flex items-center flex-col space-y-4">
-          <p>Recent photos</p>
+          <h2 className="text-2xl font-bold">Recent photos</h2>
           {/* <div>
             <p>Uploaded on 4/27/25 at 12:30pm</p>
             <Image src={cat.photoUrl} alt={cat.name} width={300} height={300} />
@@ -78,6 +80,7 @@ export default async function CatPage({ params }: PageProps) {
                     width={300}
                     height={300}
                     alt={photo.name}
+                    className="rounded-lg"
                   />
                 </div>
               ))}
