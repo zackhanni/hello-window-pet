@@ -4,10 +4,6 @@
 
 - come up with a cleaner way to reload the page after a new image is uploaded
 
-## To DO
-
-Moved to Jira
-
 ## Prisma
 
 create new migration after changing schema

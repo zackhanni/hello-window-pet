@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 interface UserDataContextType {
   loading: boolean;
   databaseUser: DatabaseUser | null;
-  userPets: Pet | null;
+  userPets: Pet[] | null;
 }
 
 const UserDataContext = createContext<UserDataContextType>({
@@ -22,10 +22,10 @@ export const UserDataProvider = ({
   session,
 }: {
   children: React.ReactNode;
-  session: Session;
+  session: Session | null;
 }) => {
   const [databaseUser, setDatabaseUser] = useState<DatabaseUser | null>(null);
-  const [userPets, setUserPets] = useState<Pet | null>(null);
+  const [userPets, setUserPets] = useState<Pet[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
