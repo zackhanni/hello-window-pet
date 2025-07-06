@@ -1,6 +1,7 @@
 import { UploadButton } from "@/components/UploadButton";
 import { getCatById, getAnimalPhotos } from "@/lib/cats";
 import { Image, ImageKitProvider } from "@imagekit/next";
+import { PetSharedImage } from "@/components/PetSharedImage";
 
 import React from "react";
 
@@ -8,11 +9,11 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function CatPage({ params }: PageProps) {
+export default async function PetPage({ params }: PageProps) {
   const { id } = await params;
-  const cat = await getCatById(id);
+  const pet = await getCatById(id);
 
-  if (!cat)
+  if (!pet)
     return (
       <div className="flex items-center justify-center h-screen flex-col">
         <p className="pb-8">Sorry, but we couldn&apos;t find that cat.</p>
@@ -37,16 +38,16 @@ export default async function CatPage({ params }: PageProps) {
     <main className="space-y-8 py-8">
       <section>
         <div className="flex items-center flex-col">
-          <h1 className="font-bold text-3xl">This is {cat.name}</h1>
+          <h1 className="font-bold text-3xl">This is {pet.name}</h1>
           {/* <p>from {cat.city}</p> */}
           <p>They have been seen {photos.length} times.</p>
 
           <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
             <Image
-              src={cat.imageUrl ?? "pets/default-image.jpg"}
+              src={pet.imageUrl ?? "pets/default-image.jpg"}
               width={300}
               height={300}
-              alt={cat.name}
+              alt={pet.name}
               priority
               className="rounded-lg"
             />
@@ -59,30 +60,16 @@ export default async function CatPage({ params }: PageProps) {
           <p className="pb-8">
             Upload a photo to let the owner know they are ok!
           </p>
-          <UploadButton petId={cat.id} />
+          <UploadButton petId={pet.id} />
         </div>
       </section>
       <section>
         <div className="flex items-center flex-col space-y-4">
           <h2 className="text-2xl font-bold">Recent photos</h2>
-          {/* <div>
-            <p>Uploaded on 4/27/25 at 12:30pm</p>
-            <Image src={cat.photoUrl} alt={cat.name} width={300} height={300} />
-          </div> */}
-
           {photos ? (
             <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
               {sortedPhotos.map((photo) => (
-                <div key={photo.fileId} className="flex flex-col items-center">
-                  <p className="px-8 pb-2 text-sm">Taken {photo.createdAt}</p>
-                  <Image
-                    src={photo.filePath}
-                    width={300}
-                    height={300}
-                    alt={photo.name}
-                    className="rounded-lg"
-                  />
-                </div>
+                <PetSharedImage photo={photo} pet={pet} key={photo.fileId} />
               ))}
             </ImageKitProvider>
           ) : (

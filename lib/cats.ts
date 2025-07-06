@@ -94,6 +94,14 @@ export const getAnimalPhotos = async (petId: string) => {
   }
 };
 
+export const deletePhotoFromImagekit = async (fileId: string) => {
+  try {
+    await imagekit.deleteFile(fileId);
+  } catch (error) {
+    console.error("Failed to delete photo from imagekit", error);
+  }
+};
+
 export async function changeAnimalImage(petId: string, imageUrl: string) {
   const updatedAnimal = await prisma.pet.update({
     where: {
