@@ -1,3 +1,5 @@
+"use client" // added for userRouter to work.
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -7,12 +9,53 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Image, ImageKitProvider } from "@imagekit/next";
 import Link from "next/link";
 import React from "react";
+import { useRouter } from "next/navigation";
+import { useUserData } from "@/contexts/UserDataContext";
+import { GeneratePDF } from "./GeneratePDF";
+import CreatePet from "./CreatePet";
+import { deletePhotoFromImagekit } from "@/lib/cats";
+import { getAnimalPhotos } from "@/lib/cats";
 
 export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
   const { id, name, species, imageUrl, description } = pet;
+  const { databaseUser } = useUserData();
+  const router = useRouter();
+
+  const handleDeletePost = async (id: string) => {
+
+    // First, delete all photos taken of this animal
+    const photos = await getAnimalPhotos(id);
+    for (const photo of photos) {
+      await deletePhotoFromImagekit(photo.fileId);
+    }
+
+    // Then, delete the animal from the database
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/pets/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (result.ok) {
+      router.refresh();
+    } else {
+      console.error("Failed to delete:", result.statusText);
+    }
+  };
 
   return (
     <Card className="flex flex-col items-center justify-center max-w-md bg-secondary border-none rounded-lg shadow-none">
@@ -32,10 +75,39 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
           />
         </ImageKitProvider>
       </CardContent>
-      <CardFooter className="w-full ">
+      <CardFooter className="w-full flex flex-col gap-4">
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant={"destructive"}
+              className="bg-transparent text-red-500 w-min shadow-none"
+            >
+              {pet.userId === databaseUser?.id ? "Delete" : "Report"} This Post
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction className='bg-red-600' onClick={() => handleDeletePost(pet.id)}>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         <Link href={`/pets/${id}`} className="w-full">
           <Button variant={"accent"}>Visit this {species}!</Button>
         </Link>
+        {pet.userId === databaseUser?.id && (
+          <>
+            <GeneratePDF pet={pet} />
+            <CreatePet pet={pet} />
+          </>
+        )}
       </CardFooter>
     </Card>
   );

@@ -6,7 +6,7 @@ const page = async () => {
     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/pets`
   ).then((res) => res.json());
 
-  console.log(pets);
+  // console.log(pets);
 
   return (
     <main className="py-8">
