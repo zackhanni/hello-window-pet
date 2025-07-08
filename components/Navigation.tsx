@@ -11,15 +11,11 @@ const Navigation = ({ session }: { session: Session | null }) => {
         <li className={`px-4 py-3 hover:underline`}>
           <Link href={"/pets"}>All pets</Link>
         </li>
-        {session?.user ? (
+        {session?.user &&
           <li className={`px-4 py-3 hover:underline`}>
             <Link href={"/account"}>My account</Link>
           </li>
-        ) : (
-          <li className={`px-4 py-3 hover:underline`}>
-            <Link href={"/api/auth/signin"}>Make Account</Link>
-          </li>
-        )}
+        }
         <li className={`px-4 py-3 hover:underline`}>
           <Link href={"/about"}>About</Link>
         </li>

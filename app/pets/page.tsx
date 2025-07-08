@@ -14,9 +14,10 @@ const page = async () => {
         All Pets
       </h1>
       <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8 place-items-center">
-        {pets.map((pet: Pet, index: number) => (
-          <PetCard pet={pet} key={pet.id} index={index} />
-        ))}
+        {pets &&
+          pets.map((pet: Pet, index: number) => (
+            <PetCard pet={pet} key={pet.id} index={index} />
+          ))}
       </section>
     </main>
   );

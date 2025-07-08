@@ -5,11 +5,28 @@ export async function GET(
   _: Request,
   { params }: { params: Promise<{ email: string }> }
 ) {
-  const { email } = await params;
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user)
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
-  return NextResponse.json(user);
+  try {
+    const { email } = await params;
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Email parameter is required" },
+        { status: 400 }
+      );
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      console.log("User not found:", email);
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    console.log("User found:", { id: user.id, email: user.email });
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error("Error finding user:", error);
+    return NextResponse.json({ error: "Failed to find user" }, { status: 500 });
+  }
 }
 
 export async function DELETE(
