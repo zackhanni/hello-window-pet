@@ -133,7 +133,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
   return (
     <Form {...form}>
       <Dialog>
-        <Button variant={"secondary"} className={`${pet ? "bg-white" : "bg-secondary"}`} asChild>
+        <Button variant={pet ? "default" : "accent"} asChild>
           <DialogTrigger>
             {pet ? "Update pet details" : "Add new pet"}
             {!pet && <Plus />}

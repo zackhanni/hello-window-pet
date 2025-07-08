@@ -99,7 +99,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
         </AlertDialog>
         <div className="flex flex-col gap-2 w-full">
           <Link href={`/pets/${id}`} >
-            <Button variant={"accent"} >{`Visit this ${species ? species : "pet"}!`}</Button>
+            <Button variant={"accent"} className="w-full!" >{`Visit this ${species ? species : "pet"}!`}</Button>
           </Link>
           {pet.userId === databaseUser?.id && (
             <>
