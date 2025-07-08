@@ -30,23 +30,26 @@ export const UserDataProvider = ({
 
   useEffect(() => {
     const fetchDatabaseUserData = async () => {
+      let dbUser = null;
+
       try {
+        // If there is a session..
         if (session?.user) {
-          const userRes = await fetch(
-            `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/users/${session.user.email}`,
+          // check if user exists in database
+          const findUserResponse = await fetch(
+            `/api/users/${session.user.email}`,
             {
               method: "GET",
             }
           );
-          if (!userRes.ok) {
-            console.error("Failed to create user", await userRes.text());
-            return;
-          }
-          let dbUser = await userRes.json();
 
-          if (!dbUser) {
-            const createRes = await fetch(
-              `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/users`,
+          if (findUserResponse.ok) {
+            // User exists, get the user data
+            dbUser = await findUserResponse.json();
+          } else if (findUserResponse.status === 404) {
+            // User doesn't exist, create them
+            const createUserResponse = await fetch(
+              `/api/users`,
               {
                 method: "POST",
                 body: JSON.stringify({
@@ -56,11 +59,17 @@ export const UserDataProvider = ({
                 headers: { "Content-Type": "application/json" },
               }
             );
-            if (!createRes.ok) {
-              console.error("Failed to create user", await createRes.text());
-              return;
+
+            if (createUserResponse.ok) {
+              dbUser = await createUserResponse.json();
+              if (process.env.NODE_ENV === "development") {
+                console.log("User created:", dbUser);
+              }
+            } else {
+              console.error("Failed to create user", await createUserResponse.text());
             }
-            dbUser = await createRes.json();
+          } else {
+            console.error("Error checking user existence:", findUserResponse.status);
           }
 
           setDatabaseUser(dbUser);
@@ -80,20 +89,29 @@ export const UserDataProvider = ({
 
   useEffect(() => {
     const fetchUserAnimals = async () => {
+      if (!databaseUser?.id) return;
+
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/users/user/${databaseUser?.id}/pets`,
+          `/api/users/user/${databaseUser.id}/pets`,
           {
             method: "GET",
           }
         );
-        const pets = await res.json();
-        setUserPets(pets);
+
+        if (res.ok) {
+          const pets = await res.json();
+          setUserPets(pets);
+        } else {
+          console.error("Failed to fetch user pets:", res.status);
+          setUserPets([]);
+        }
       } catch (error) {
         console.error(
-          "An error occurred while fetching user user pets:",
+          "An error occurred while fetching user pets:",
           error
         );
+        setUserPets([]);
       }
     };
 
