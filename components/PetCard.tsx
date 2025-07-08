@@ -79,7 +79,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant={"destructive"}
-              className="bg-transparent text-red-500 w-min shadow-none"
+              className="bg-transparent text-destructive hover:text-white shadow-none w-full"
             >
               {pet.userId === databaseUser?.id ? "Delete" : "Report"} This Post
             </Button>
@@ -97,16 +97,17 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-
-        <Link href={`/pets/${id}`} className="w-full">
-          <Button variant={"accent"}>Visit this {species}!</Button>
-        </Link>
-        {pet.userId === databaseUser?.id && (
-          <>
-            <GeneratePDF pet={pet} />
-            <CreatePet pet={pet} />
-          </>
-        )}
+        <div className="flex flex-col gap-2 w-full">
+          <Link href={`/pets/${id}`} >
+            <Button variant={"accent"} className="w-full!" >{`Visit this ${species ? species : "pet"}!`}</Button>
+          </Link>
+          {pet.userId === databaseUser?.id && (
+            <>
+              <GeneratePDF pet={pet} />
+              <CreatePet pet={pet} />
+            </>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

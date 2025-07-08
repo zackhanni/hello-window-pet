@@ -66,7 +66,7 @@ export const GeneratePDF = ({ pet }: { pet: Pet }) => {
   };
 
   return (
-    <Button variant={"secondary"} className="bg-white" onClick={generatePDF}>
+    <Button variant={"default"} onClick={generatePDF}>
       Generate QR code PDF
     </Button>
   );

@@ -95,8 +95,8 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
         const { name, species, age, description } = values;
         const userId = databaseUser?.id;
         // Create pet //
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/pets`,
+        const findPetResponse = await fetch(
+          `/api/pets`,
           {
             method: "POST",
             body: JSON.stringify({ name, species, age, description, userId }),
@@ -104,12 +104,12 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
           }
         );
 
-        if (!res.ok) {
-          console.error("Failed to create pet", await res.text());
+        if (!findPetResponse.ok) {
+          console.error("Failed to create pet", await findPetResponse.text());
           return;
         }
 
-        const newAnimal = await res.json();
+        const newAnimal = await findPetResponse.json();
         const uploadedImage = await uploadToImagekit(
           values.image,
           `pets/${newAnimal.id}`
@@ -117,7 +117,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
 
         await changePetImage(newAnimal.id, uploadedImage.filePath);
 
-        if (res.ok) {
+        if (findPetResponse.ok) {
           router.refresh();
         }
       }
@@ -133,7 +133,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
   return (
     <Form {...form}>
       <Dialog>
-        <Button variant={"secondary"} className="bg-white" asChild>
+        <Button variant={pet ? "default" : "accent"} asChild>
           <DialogTrigger>
             {pet ? "Update pet details" : "Add new pet"}
             {!pet && <Plus />}
@@ -193,6 +193,10 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
                       max="100"
                       step="1"
                       {...field}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        field.onChange(value === "" ? 0 : parseInt(value, 10));
+                      }}
                     />
                   </FormControl>
                   {/* <FormDescription>This will be public.</FormDescription> */}
@@ -280,7 +284,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
             </DialogClose>
             <DialogFooter className="sm:justify-start">
               <DialogClose asChild>
-                <Button type="button" variant="secondary">
+                <Button type="button" variant="outline">
                   Cancel
                 </Button>
               </DialogClose>
