@@ -96,7 +96,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
         const userId = databaseUser?.id;
         // Create pet //
         const findPetResponse = await fetch(
-          `/api/pets`,
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/pets`,
           {
             method: "POST",
             body: JSON.stringify({ name, species, age, description, userId }),
