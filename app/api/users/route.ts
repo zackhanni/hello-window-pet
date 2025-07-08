@@ -13,6 +13,17 @@ export async function POST(req: Request) {
       );
     }
 
+    // Test database connection
+    try {
+      await prisma.$connect();
+    } catch (dbError) {
+      console.error("Database connection failed:", dbError);
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 500 }
+      );
+    }
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return NextResponse.json(
@@ -33,9 +44,17 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Error creating user:", error);
     return NextResponse.json(
-      { error: "Failed to create user" },
+      {
+        error: "Failed to create user",
+        details:
+          process.env.NODE_ENV === "development"
+            ? (error as Error).message
+            : undefined,
+      },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }
 

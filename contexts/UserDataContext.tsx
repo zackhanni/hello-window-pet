@@ -35,9 +35,10 @@ export const UserDataProvider = ({
       try {
         // If there is a session..
         if (session?.user) {
+          const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
           // check if user exists in database
           const findUserResponse = await fetch(
-            `/api/users/${session.user.email}`,
+            `${apiEndpoint}/api/users/${session.user.email}`,
             {
               method: "GET",
             }
@@ -49,7 +50,7 @@ export const UserDataProvider = ({
           } else if (findUserResponse.status === 404) {
             // User doesn't exist, create them
             const createUserResponse = await fetch(
-              `/api/users`,
+              `${apiEndpoint}/api/users`,
               {
                 method: "POST",
                 body: JSON.stringify({
@@ -92,8 +93,9 @@ export const UserDataProvider = ({
       if (!databaseUser?.id) return;
 
       try {
+        const apiEndpoint = process.env.NEXT_PUBLIC_API_ENDPOINT || '';
         const res = await fetch(
-          `/api/users/user/${databaseUser.id}/pets`,
+          `${apiEndpoint}/api/users/user/${databaseUser.id}/pets`,
           {
             method: "GET",
           }
