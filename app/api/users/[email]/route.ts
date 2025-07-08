@@ -15,6 +15,17 @@ export async function GET(
       );
     }
 
+    // Test database connection
+    try {
+      await prisma.$connect();
+    } catch (dbError) {
+      console.error("Database connection failed:", dbError);
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 500 }
+      );
+    }
+
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       console.log("User not found:", email);
@@ -25,7 +36,18 @@ export async function GET(
     return NextResponse.json(user);
   } catch (error) {
     console.error("Error finding user:", error);
-    return NextResponse.json({ error: "Failed to find user" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Failed to find user",
+        details:
+          process.env.NODE_ENV === "development"
+            ? (error as Error).message
+            : undefined,
+      },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
