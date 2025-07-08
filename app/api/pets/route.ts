@@ -16,16 +16,32 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { userId, name, description, species, age } = await req.json();
-  const newPet = await prisma.pet.create({
-    data: {
-      userId,
-      name,
-      description,
-      species,
-      age,
-      imageUrl: null,
-    },
-  });
-  return NextResponse.json(newPet);
+  try {
+    const { userId, name, description, species, age } = await req.json();
+
+    if (!userId || !name) {
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 }
+      );
+    }
+
+    const newPet = await prisma.pet.create({
+      data: {
+        userId,
+        name,
+        description,
+        species,
+        age,
+        imageUrl: null,
+      },
+    });
+    return NextResponse.json(newPet);
+  } catch (error) {
+    console.error("Error creating pet:", error);
+    return NextResponse.json(
+      { error: "Failed to create pet" },
+      { status: 500 }
+    );
+  }
 }
