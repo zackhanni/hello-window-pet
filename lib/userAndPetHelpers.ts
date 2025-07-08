@@ -50,7 +50,7 @@ export async function getUserPetsByEmail(user: SessionUser) {
   return await prisma.pet.findMany({ where: { userId: databaseUser.id } });
 }
 
-export async function getCatById(id: string) {
+export async function getPetById(id: string) {
   return await prisma.pet.findUnique({ where: { id: id } });
 }
 
@@ -62,7 +62,7 @@ function convertFromZuluTime(zuluString: string) {
   return new Date(zuluString);
 }
 
-export const getAnimalPhotos = async (petId: string) => {
+export const getPetPhotos = async (petId: string) => {
   try {
     const result = await imagekit.listFiles({
       path: `pets/${petId}`,
@@ -94,7 +94,7 @@ export const getAnimalPhotos = async (petId: string) => {
   }
 };
 
-export const deletePhotoFromImagekit = async (fileId: string) => {
+export const deletePetPhotoFromImagekit = async (fileId: string) => {
   try {
     await imagekit.deleteFile(fileId);
   } catch (error) {
@@ -102,7 +102,7 @@ export const deletePhotoFromImagekit = async (fileId: string) => {
   }
 };
 
-export async function changeAnimalImage(petId: string, imageUrl: string) {
+export async function changePetImage(petId: string, imageUrl: string) {
   const updatedAnimal = await prisma.pet.update({
     where: {
       id: petId,
@@ -115,7 +115,7 @@ export async function changeAnimalImage(petId: string, imageUrl: string) {
   return updatedAnimal;
 }
 
-export async function updateAnimal(petId: string, updatedAnimalData: Pet) {
+export async function updatePet(petId: string, updatedAnimalData: Pet) {
   const { name, description, species, age, imageUrl } = updatedAnimalData;
 
   const updatedAnimal = await prisma.pet.update({

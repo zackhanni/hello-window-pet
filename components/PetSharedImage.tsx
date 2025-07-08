@@ -15,7 +15,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useUserData } from "@/contexts/UserDataContext";
-import { deletePhotoFromImagekit } from '@/lib/cats';
+import { deletePetPhotoFromImagekit } from '@/lib/userAndPetHelpers';
 
 interface PetPhoto {
     fileId: string;
@@ -39,7 +39,7 @@ export const PetSharedImage = ({ photo, pet }: { photo: PetPhoto, pet: Pet }) =>
     const { databaseUser } = useUserData();
     const handleRemovePhoto = async (fileId: string) => {
         console.log('Removing photo:', fileId);
-        await deletePhotoFromImagekit(fileId);
+        await deletePetPhotoFromImagekit(fileId);
         // refresh the page to update the pet images
     };
 

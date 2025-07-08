@@ -27,8 +27,7 @@ import { useRouter } from "next/navigation";
 import { useUserData } from "@/contexts/UserDataContext";
 import { GeneratePDF } from "./GeneratePDF";
 import CreatePet from "./CreatePet";
-import { deletePhotoFromImagekit } from "@/lib/cats";
-import { getAnimalPhotos } from "@/lib/cats";
+import { deletePetPhotoFromImagekit, getPetPhotos } from "@/lib/userAndPetHelpers";
 
 export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
   const { id, name, species, imageUrl, description } = pet;
@@ -38,9 +37,9 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
   const handleDeletePost = async (id: string) => {
 
     // First, delete all photos taken of this animal
-    const photos = await getAnimalPhotos(id);
+    const photos = await getPetPhotos(id);
     for (const photo of photos) {
-      await deletePhotoFromImagekit(photo.fileId);
+      await deletePetPhotoFromImagekit(photo.fileId);
     }
 
     // Then, delete the animal from the database

@@ -1,5 +1,5 @@
 import { UploadButton } from "@/components/UploadButton";
-import { getCatById, getAnimalPhotos } from "@/lib/cats";
+import { getPetById, getPetPhotos } from "@/lib/userAndPetHelpers";
 import { Image, ImageKitProvider } from "@imagekit/next";
 import { PetSharedImage } from "@/components/PetSharedImage";
 
@@ -11,7 +11,7 @@ type PageProps = {
 
 export default async function PetPage({ params }: PageProps) {
   const { id } = await params;
-  const pet = await getCatById(id);
+  const pet = await getPetById(id);
 
   if (!pet)
     return (
@@ -29,7 +29,7 @@ export default async function PetPage({ params }: PageProps) {
       </div>
     );
 
-  const photos = await getAnimalPhotos(id);
+  const photos = await getPetPhotos(id);
   const sortedPhotos = photos.sort((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });

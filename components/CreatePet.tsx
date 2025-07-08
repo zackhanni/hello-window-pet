@@ -27,7 +27,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
-import { changeAnimalImage } from "@/lib/cats";
+import { changePetImage } from "@/lib/userAndPetHelpers";
 import { uploadToImagekit } from "./UploadToImagekit";
 import { useRouter } from "next/navigation";
 import { useUserData } from "@/contexts/UserDataContext";
@@ -115,7 +115,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
           `pets/${newAnimal.id}`
         );
 
-        await changeAnimalImage(newAnimal.id, uploadedImage.filePath);
+        await changePetImage(newAnimal.id, uploadedImage.filePath);
 
         if (res.ok) {
           router.refresh();
