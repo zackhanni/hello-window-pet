@@ -4,11 +4,11 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     // Test database connection with a simple query
-    const { data: userCount, error: userError } = await supabase
+    const { count: userCount, error: userError } = await supabase
       .from("users")
       .select("id", { count: "exact", head: true });
 
-    const { data: petCount, error: petError } = await supabase
+    const { count: petCount, error: petError } = await supabase
       .from("pets")
       .select("id", { count: "exact", head: true });
 
@@ -23,8 +23,8 @@ export async function GET() {
     return NextResponse.json({
       status: "healthy",
       database: "connected",
-      userCount: userCount?.length || 0,
-      petCount: petCount?.length || 0,
+      userCount: userCount || 0, // TO DO: numbers not correct. showing 0
+      petCount: petCount || 0,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
