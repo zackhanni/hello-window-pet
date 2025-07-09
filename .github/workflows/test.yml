@@ -1,0 +1,77 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-browsers-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-browsers-
+          
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+      
+    - name: Setup test environment
+      run: |
+        echo "NEXT_PUBLIC_API_ENDPOINT=http://localhost:3000" >> $GITHUB_ENV
+        echo "NODE_ENV=test" >> $GITHUB_ENV
+        # Add test-specific environment variables
+        echo "PLAYWRIGHT_HTML_REPORT=1" >> $GITHUB_ENV
+        
+    - name: Build application
+      run: npm run build
+      
+    - name: Start application
+      run: |
+        npm run start &
+        echo "Waiting for application to start..."
+        sleep 20
+        echo "Application should be ready"
+      env:
+        PORT: 3000
+        
+    - name: Run Playwright tests
+      run: npx playwright test
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: |
+          playwright-report/
+          test-results/
+        retention-days: 30
+        
+    - name: Upload screenshots on failure
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: failure-screenshots
+        path: test-results/
+        retention-days: 30 

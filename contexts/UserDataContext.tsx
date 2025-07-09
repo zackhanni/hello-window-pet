@@ -31,7 +31,6 @@ export const UserDataProvider = ({
   useEffect(() => {
     const fetchDatabaseUserData = async () => {
       let dbUser = null;
-
       try {
         // If there is a session..
         if (session?.user) {
