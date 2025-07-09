@@ -1,29 +1,24 @@
 // app/api/pets/route.ts
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    // Test database connection
-    try {
-      await prisma.$connect();
-    } catch (dbError) {
-      console.error("Database connection failed:", dbError);
+    const { data: pets, error } = await supabase
+      .from("pets")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.error("Database connection failed:", error);
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 }
       );
     }
 
-    const pets = await prisma.pet.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      skip: 0, // for pagination
-      take: 10,
-    });
-
-    return NextResponse.json(pets);
+    return NextResponse.json(pets || []);
   } catch (error) {
     console.error("Error fetching pets:", error);
     return NextResponse.json(
@@ -36,8 +31,6 @@ export async function GET() {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -52,27 +45,27 @@ export async function POST(req: Request) {
       );
     }
 
-    // Test database connection
-    try {
-      await prisma.$connect();
-    } catch (dbError) {
-      console.error("Database connection failed:", dbError);
-      return NextResponse.json(
-        { error: "Database connection failed" },
-        { status: 500 }
-      );
-    }
-
-    const newPet = await prisma.pet.create({
-      data: {
-        userId,
+    const { data: newPet, error } = await supabase
+      .from("pets")
+      .insert({
+        user_id: userId,
         name,
         description,
         species,
         age,
-        imageUrl: null,
-      },
-    });
+        image_url: null,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating pet:", error);
+      return NextResponse.json(
+        { error: "Failed to create pet" },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(newPet);
   } catch (error) {
     console.error("Error creating pet:", error);
@@ -86,7 +79,5 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -44,7 +44,7 @@ export default async function PetPage({ params }: PageProps) {
 
           <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
             <Image
-              src={pet.imageUrl ?? "pets/default-image.jpg"}
+              src={pet.image_url ?? "pets/default-image.jpg"}
               width={300}
               height={300}
               alt={pet.name}

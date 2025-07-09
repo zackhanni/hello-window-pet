@@ -1,22 +1,30 @@
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    // Test database connection
-    await prisma.$connect();
+    // Test database connection with a simple query
+    const { data: userCount, error: userError } = await supabase
+      .from("users")
+      .select("id", { count: "exact", head: true });
 
-    // Test a simple query
-    const userCount = await prisma.user.count();
-    const petCount = await prisma.pet.count();
+    const { data: petCount, error: petError } = await supabase
+      .from("pets")
+      .select("id", { count: "exact", head: true });
 
-    await prisma.$disconnect();
+    if (userError || petError) {
+      console.error("Database connection failed:", userError || petError);
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       status: "healthy",
       database: "connected",
-      userCount,
-      petCount,
+      userCount: userCount?.length || 0,
+      petCount: petCount?.length || 0,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

@@ -10,16 +10,17 @@ interface DatabaseUser {
   name?: string;
   image?: string;
   city?: string;
-  pets: Pet[];
+  created_at?: string;
+  pets?: Pet[];
 }
 
 interface Pet {
   id: string;
-  userId: string;
+  user_id: string;
   name: string;
   description?: string;
   species?: string;
   age?: number;
-  imageUrl: string;
-  createdAt: Date;
+  image_url?: string;
+  created_at: string;
 }

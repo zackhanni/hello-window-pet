@@ -30,7 +30,7 @@ import CreatePet from "./CreatePet";
 import { deletePetPhotoFromImagekit, getPetPhotos } from "@/lib/userAndPetHelpers";
 
 export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
-  const { id, name, species, imageUrl, description } = pet;
+  const { id, name, species, image_url, description } = pet;
   const { databaseUser } = useUserData();
   const router = useRouter();
 
@@ -65,7 +65,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
       <CardContent className="grid gap-4">
         <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
           <Image
-            src={imageUrl ?? "pets/default-image.jpg"}
+            src={image_url ?? "pets/default-image.jpg"}
             priority={index === 0}
             width={300}
             height={300}
@@ -81,7 +81,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
             <Button variant={"destructive"}
               className="bg-transparent text-destructive hover:text-white shadow-none w-full"
             >
-              {pet.userId === databaseUser?.id ? "Delete" : "Report"} This Post
+              {pet.user_id === databaseUser?.id ? "Delete" : "Report"} This Post
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -101,7 +101,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
           <Link href={`/pets/${id}`} >
             <Button variant={"accent"} className="w-full!" >{`Visit this ${species ? species : "pet"}!`}</Button>
           </Link>
-          {pet.userId === databaseUser?.id && (
+          {pet.user_id === databaseUser?.id && (
             <>
               <GeneratePDF pet={pet} />
               <CreatePet pet={pet} />

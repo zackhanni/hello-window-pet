@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -13,22 +13,20 @@ export async function GET(
       return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     }
 
-    // Test database connection
-    try {
-      await prisma.$connect();
-    } catch (dbError) {
-      console.error("Database connection failed:", dbError);
+    const { data: pets, error } = await supabase
+      .from("pets")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (error) {
+      console.error("Database connection failed:", error);
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 }
       );
     }
 
-    const pets = await prisma.pet.findMany({
-      where: { userId },
-    });
-
-    return NextResponse.json(pets);
+    return NextResponse.json(pets || []);
   } catch (error) {
     console.error("Error fetching pets:", error);
     return NextResponse.json(
@@ -41,7 +39,5 @@ export async function GET(
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

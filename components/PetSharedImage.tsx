@@ -31,9 +31,9 @@ interface Pet {
     description: string | null;
     species: string | null;
     age: number | null;
-    imageUrl: string | null;
-    userId: string;
-    createdAt: Date;
+    image_url: string | null;
+    user_id: string;
+    created_at: string;
 }
 
 export const PetSharedImage = ({ photo, pet }: { photo: PetPhoto, pet: Pet }) => {
@@ -62,7 +62,7 @@ export const PetSharedImage = ({ photo, pet }: { photo: PetPhoto, pet: Pet }) =>
                     <Button variant={"destructive"}
                         className="bg-white text-destructive hover:text-white w-min shadow-none"
                     >
-                        {pet.userId === databaseUser?.id ? "Delete" : "Report"} This Photo
+                        {pet.user_id === databaseUser?.id ? "Delete" : "Report"} This Photo
                     </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>

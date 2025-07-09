@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 export const GeneratePDF = ({ pet }: { pet: Pet }) => {
   const generatePDF = async () => {
     const doc = new jsPDF();
-    const { id, name, imageUrl, species } = pet;
+    const { id, name, image_url, species } = pet;
 
     const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -32,10 +32,10 @@ export const GeneratePDF = ({ pet }: { pet: Pet }) => {
     );
 
     // Pet Image
-    if (imageUrl) {
+    if (image_url) {
       try {
         const imageData = await fetch(
-          `https://ik.imagekit.io/assortfit/${imageUrl}`
+          `https://ik.imagekit.io/assortfit/${image_url}`
         )
           .then((res) => res.blob())
           .then((blob) => {
