@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useUserData } from "@/contexts/UserDataContext";
 import { deletePetPhotoFromImagekit } from '@/lib/userAndPetHelpers';
+import { useRouter } from 'next/navigation';
 
 interface PetPhoto {
     fileId: string;
@@ -37,10 +38,11 @@ interface Pet {
 
 export const PetSharedImage = ({ photo, pet }: { photo: PetPhoto, pet: Pet }) => {
     const { databaseUser } = useUserData();
+    const router = useRouter();
     const handleRemovePhoto = async (fileId: string) => {
         console.log('Removing photo:', fileId);
         await deletePetPhotoFromImagekit(fileId);
-        // refresh the page to update the pet images
+        router.refresh();
     };
 
     return (
@@ -58,7 +60,7 @@ export const PetSharedImage = ({ photo, pet }: { photo: PetPhoto, pet: Pet }) =>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <Button variant={"destructive"}
-                        className="bg-white text-red-500 w-min shadow-none"
+                        className="bg-white text-destructive hover:text-white w-min shadow-none"
                     >
                         {pet.userId === databaseUser?.id ? "Delete" : "Report"} This Photo
                     </Button>
@@ -72,7 +74,7 @@ export const PetSharedImage = ({ photo, pet }: { photo: PetPhoto, pet: Pet }) =>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction className='bg-red-600' onClick={() => handleRemovePhoto(photo.fileId)}>Continue</AlertDialogAction>
+                        <AlertDialogAction className='bg-destructive hover:bg-destructive/60 text-white' onClick={() => handleRemovePhoto(photo.fileId)}>Continue</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
