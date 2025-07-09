@@ -37,6 +37,8 @@ const formSchema = z.object({
 
 export const UploadButton = ({ petId }: { petId: string }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,12 +58,18 @@ export const UploadButton = ({ petId }: { petId: string }) => {
         `pets/${petId}` // if you want to edit the naming scheme later. this is it
       );
 
-      if (result.ok) {
+      // uploadToImagekit returns the image data directly, not a response object
+      if (result && result.fileId) {
         console.log("Uploaded to ImageKit!");
-        // alert("Upload successful!");
+
+        // Reset form and close dialog
+        form.reset();
+        setIsDialogOpen(false);
+
+        // Refresh the page to show the new image
         router.refresh();
       } else {
-        console.error("Failed to delete:", result.statusText);
+        console.error("Upload failed: Invalid response from ImageKit");
       }
     } catch (error) {
       console.error("Upload error:", error);
@@ -73,7 +81,7 @@ export const UploadButton = ({ petId }: { petId: string }) => {
 
   return (
     <Form {...form}>
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <Button asChild variant={"accent"}>
           <DialogTrigger>
             Upload Image
