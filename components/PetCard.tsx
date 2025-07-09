@@ -35,7 +35,6 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
   const router = useRouter();
 
   const handleDeletePost = async (id: string) => {
-
     // First, delete all photos taken of this animal
     const photos = await getPetPhotos(id);
     for (const photo of photos) {
@@ -57,10 +56,13 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
   };
 
   return (
-    <Card className="flex flex-col items-center justify-center max-w-md bg-secondary border-none rounded-lg shadow-none">
+    <Card
+      className="flex flex-col items-center justify-center max-w-md bg-secondary border-none rounded-lg shadow-none"
+      data-testid="pet-card"
+    >
       <CardHeader className="w-full">
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle data-testid="pet-name">{name}</CardTitle>
+        <CardDescription data-testid="pet-description">{description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
@@ -71,6 +73,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
             height={300}
             alt={name}
             className="max-h-[300px] object-cover rounded-lg"
+            data-testid="pet-image"
           />
         </ImageKitProvider>
       </CardContent>
@@ -78,8 +81,10 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant={"destructive"}
+            <Button
+              variant={"destructive"}
               className="bg-transparent text-destructive hover:text-white shadow-none w-full"
+              data-testid="delete-report-button"
             >
               {pet.user_id === databaseUser?.id ? "Delete" : "Report"} This Post
             </Button>
@@ -99,7 +104,13 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
         </AlertDialog>
         <div className="flex flex-col gap-2 w-full">
           <Link href={`/pets/${id}`} >
-            <Button variant={"accent"} className="w-full!" >{`Visit this ${species ? species : "pet"}!`}</Button>
+            <Button
+              variant={"accent"}
+              className="w-full!"
+              data-testid="visit-pet-button"
+            >
+              {`Visit this ${species ? species : "pet"}!`}
+            </Button>
           </Link>
           {pet.user_id === databaseUser?.id && (
             <>
