@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -15,24 +15,32 @@ export async function GET(
       );
     }
 
-    // Test database connection
-    try {
-      await prisma.$connect();
-    } catch (dbError) {
-      console.error("Database connection failed:", dbError);
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email)
+      .single();
+
+    if (error) {
+      // If error is because no rows found, return 404
+      if (
+        error.code === "PGRST116" ||
+        error.message?.toLowerCase().includes("no rows")
+      ) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 });
+      }
+      // Otherwise, log and return 500
+      console.error("Supabase error:", error);
       return NextResponse.json(
-        { error: "Database connection failed" },
+        { error: "Database error", details: error.message },
         { status: 500 }
       );
     }
 
-    const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      console.log("User not found:", email);
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    console.log("User found:", { id: user.id, email: user.email });
     return NextResponse.json(user);
   } catch (error) {
     console.error("Error finding user:", error);
@@ -46,8 +54,6 @@ export async function GET(
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -57,7 +63,17 @@ export async function DELETE(
 ) {
   try {
     const { email } = await params;
-    await prisma.user.delete({ where: { email } });
+
+    const { error } = await supabase.from("users").delete().eq("email", email);
+
+    if (error) {
+      console.error("Error deleting user:", error);
+      return NextResponse.json(
+        { error: "Failed to delete user" },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json({ message: "User deleted" });
   } catch (err) {
     console.log("Error deleting user:", err);

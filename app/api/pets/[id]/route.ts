@@ -1,5 +1,5 @@
 // app/api/pets/[id]/route.ts
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -9,18 +9,20 @@ export async function GET(
   try {
     const { id } = await params;
 
-    // Test database connection
-    try {
-      await prisma.$connect();
-    } catch (dbError) {
-      console.error("Database connection failed:", dbError);
+    const { data: pet, error } = await supabase
+      .from("pets")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error("Database connection failed:", error);
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 }
       );
     }
 
-    const pet = await prisma.pet.findUnique({ where: { id } });
     if (!pet)
       return NextResponse.json({ error: "Pet not found" }, { status: 404 });
     return NextResponse.json(pet);
@@ -36,8 +38,6 @@ export async function GET(
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -49,21 +49,20 @@ export async function PUT(
     const { id } = await params;
     const { name, description, species, age, imageUrl } = await req.json();
 
-    // Test database connection
-    try {
-      await prisma.$connect();
-    } catch (dbError) {
-      console.error("Database connection failed:", dbError);
+    const { data: updatedPet, error } = await supabase
+      .from("pets")
+      .update({ name, description, species, age, image_url: imageUrl })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Database connection failed:", error);
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 }
       );
     }
-
-    const updatedPet = await prisma.pet.update({
-      where: { id },
-      data: { name, description, species, age, imageUrl },
-    });
 
     return NextResponse.json(updatedPet);
   } catch (error) {
@@ -78,8 +77,6 @@ export async function PUT(
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -90,18 +87,16 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // Test database connection
-    try {
-      await prisma.$connect();
-    } catch (dbError) {
-      console.error("Database connection failed:", dbError);
+    const { error } = await supabase.from("pets").delete().eq("id", id);
+
+    if (error) {
+      console.error("Database connection failed:", error);
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 }
       );
     }
 
-    await prisma.pet.delete({ where: { id } });
     return NextResponse.json({ message: "Pet deleted" });
   } catch (error) {
     console.error("Error deleting pet:", error);
@@ -115,7 +110,5 @@ export async function DELETE(
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }

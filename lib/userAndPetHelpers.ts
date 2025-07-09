@@ -1,32 +1,61 @@
 "use server"; // does this fix the weird issues?
 
 import imagekit from "./imagekit";
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 //
 // User Related
 //
 
 export async function userExists(email: string) {
-  const user = getUserByEmail(email);
+  const user = await getUserByEmail(email);
   if (!user) return false;
   return true;
 }
 
 export async function getUserByEmail(email: string) {
-  return await prisma.user.findUnique({ where: { email: email } });
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email)
+      .single();
+
+    if (error) {
+      console.error("Error fetching user:", error);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in getUserByEmail:", error);
+    return null;
+  }
 }
 
 export async function addUserToDB(user: SessionUser) {
   const { email, name } = user;
 
-  const newUser = await prisma.user.create({
-    data: {
-      email: email,
-      name: name,
-    },
-  });
-  return newUser;
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .insert({
+        email: email,
+        name: name,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating user:", error);
+      throw new Error(`Failed to create user: ${error.message}`);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in addUserToDB:", error);
+    throw error;
+  }
 }
 
 //
@@ -47,15 +76,56 @@ export async function getUserPetsByEmail(user: SessionUser) {
       );
     }
   }
-  return await prisma.pet.findMany({ where: { userId: databaseUser.id } });
+
+  try {
+    const { data, error } = await supabase
+      .from("pets")
+      .select("*")
+      .eq("user_id", databaseUser.id);
+
+    if (error) {
+      console.error("Error fetching pets:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Error in getUserPetsByEmail:", error);
+    return [];
+  }
 }
 
 export async function getPetById(id: string) {
-  return await prisma.pet.findUnique({ where: { id: id } });
+  try {
+    const { data, error } = await supabase
+      .from("pets")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      console.error("Error fetching pet:", error);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in getPetById:", error);
+    return null;
+  }
 }
 
 // export async function getAllCats() {
-//   return await prisma.pet.findMany();
+//   const { data, error } = await supabase
+//     .from('pets')
+//     .select('*');
+//
+//   if (error) {
+//     console.error('Error fetching all pets:', error);
+//     return [];
+//   }
+//
+//   return data || [];
 // }
 
 function convertFromZuluTime(zuluString: string) {
@@ -103,33 +173,51 @@ export const deletePetPhotoFromImagekit = async (fileId: string) => {
 };
 
 export async function changePetImage(petId: string, imageUrl: string) {
-  const updatedAnimal = await prisma.pet.update({
-    where: {
-      id: petId,
-    },
-    data: {
-      imageUrl: imageUrl,
-    },
-  });
+  try {
+    const { data, error } = await supabase
+      .from("pets")
+      .update({ image_url: imageUrl })
+      .eq("id", petId)
+      .select()
+      .single();
 
-  return updatedAnimal;
+    if (error) {
+      console.error("Error updating pet image:", error);
+      throw new Error(`Failed to update pet image: ${error.message}`);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in changePetImage:", error);
+    throw error;
+  }
 }
 
 export async function updatePet(petId: string, updatedAnimalData: Pet) {
-  const { name, description, species, age, imageUrl } = updatedAnimalData;
+  const { name, description, species, age, image_url } = updatedAnimalData;
 
-  const updatedAnimal = await prisma.pet.update({
-    where: {
-      id: petId,
-    },
-    data: {
-      name: name,
-      description: description,
-      species: species,
-      age: age,
-      imageUrl: imageUrl,
-    },
-  });
+  try {
+    const { data, error } = await supabase
+      .from("pets")
+      .update({
+        name: name,
+        description: description,
+        species: species,
+        age: age,
+        image_url: image_url,
+      })
+      .eq("id", petId)
+      .select()
+      .single();
 
-  return updatedAnimal;
+    if (error) {
+      console.error("Error updating pet:", error);
+      throw new Error(`Failed to update pet: ${error.message}`);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in updatePet:", error);
+    throw error;
+  }
 }

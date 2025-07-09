@@ -11,21 +11,29 @@ type PageProps = {
 
 export default async function PetPage({ params }: PageProps) {
   const { id } = await params;
-  const pet = await getPetById(id);
+  let pet = null;
+  try {
+    pet = await getPetById(id);
+  } catch (error) {
+    console.error("Error fetching pet:", error);
+    pet = null;
+  }
 
-  if (!pet)
+  if (!pet || !pet.image_url)
     return (
       <div className="flex items-center justify-center h-screen flex-col">
         <p className="pb-8">Sorry, but we couldn&apos;t find that cat.</p>
         <p> Heres one of ours though!</p>
-        <Image
-          src={"/cats/buddy.jpg"}
-          alt={"Buddy the cat"}
-          priority
-          width={200}
-          height={200}
-          className="rounded-lg"
-        />
+        <ImageKitProvider urlEndpoint={process.env.NEXT_PUBLIC_API_ENDPOINT}>
+          <Image
+            src={"/cats/buddy.jpg"}
+            alt={"Buddy the cat"}
+            priority
+            width={300}
+            height={300}
+            className="rounded-lg"
+          />
+        </ImageKitProvider>
       </div>
     );
 
@@ -44,7 +52,7 @@ export default async function PetPage({ params }: PageProps) {
 
           <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
             <Image
-              src={pet.imageUrl ?? "pets/default-image.jpg"}
+              src={pet.image_url ?? "pets/default-image.jpg"}
               width={300}
               height={300}
               alt={pet.name}

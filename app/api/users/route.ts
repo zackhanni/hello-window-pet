@@ -1,5 +1,5 @@
 // app/api/users/route.ts
-import { prisma } from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -13,18 +13,21 @@ export async function POST(req: Request) {
       );
     }
 
-    // Test database connection
-    try {
-      await prisma.$connect();
-    } catch (dbError) {
-      console.error("Database connection failed:", dbError);
+    // Check if user already exists
+    const { data: existingUser, error: checkError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("email", email)
+      .single();
+
+    if (checkError && checkError.code !== "PGRST116") {
+      console.error("Database connection failed:", checkError);
       return NextResponse.json(
         { error: "Database connection failed" },
         { status: 500 }
       );
     }
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return NextResponse.json(
         { error: "User already exists" },
@@ -32,9 +35,20 @@ export async function POST(req: Request) {
       );
     }
 
-    const newUser = await prisma.user.create({
-      data: { email, name },
-    });
+    // Create new user
+    const { data: newUser, error: createError } = await supabase
+      .from("users")
+      .insert({ email, name })
+      .select()
+      .single();
+
+    if (createError) {
+      console.error("Error creating user:", createError);
+      return NextResponse.json(
+        { error: "Failed to create user" },
+        { status: 500 }
+      );
+    }
 
     console.log("User created successfully:", {
       id: newUser.id,
@@ -53,12 +67,20 @@ export async function POST(req: Request) {
       },
       { status: 500 }
     );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
 // export async function GET() {
-//   const users = await prisma.user.findMany();
+//   const { data: users, error } = await supabase
+//     .from('users')
+//     .select('*');
+//
+//   if (error) {
+//     return NextResponse.json(
+//       { error: "Failed to fetch users" },
+//       { status: 500 }
+//     );
+//   }
+//
 //   return NextResponse.json(users);
 // }

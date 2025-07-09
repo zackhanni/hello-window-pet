@@ -63,7 +63,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
         //
         // If editing
         //
-        let imageUrl = pet.imageUrl;
+        let imageUrl = pet.image_url;
         if (values.image) {
           const uploadedImage = await uploadToImagekit(
             values.image,
