@@ -1,6 +1,9 @@
 import { PetCard } from "@/components/PetCard";
 import React from "react";
 
+// Force dynamic rendering to prevent build-time data fetching
+export const dynamic = 'force-dynamic';
+
 const page = async () => {
   let pets = [];
 
