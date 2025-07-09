@@ -93,7 +93,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction className='bg-red-600' onClick={() => handleDeletePost(pet.id)}>Continue</AlertDialogAction>
+              <AlertDialogAction className='bg-destructive hover:bg-destructive/60 text-white' onClick={() => handleDeletePost(pet.id)}>Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

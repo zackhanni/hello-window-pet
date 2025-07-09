@@ -15,6 +15,16 @@ npx prisma db seed
 check db with prisma studio
 npx prisma studio
 
+## Debug Routes
+
+### Check if env variables are accessible
+
+https://do-you-see-my-cat.vercel.app/api/debug
+
+### Check server connection status
+
+https://do-you-see-my-cat.vercel.app/api/health
+
 ## API Details
 
 /api/users/
