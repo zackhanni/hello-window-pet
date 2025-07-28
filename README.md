@@ -1,36 +1,166 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐾 Hello Window Pet
 
-## Getting Started
+--- AKA ---
 
-First, run the development server:
+Do You See My Cat?
+
+A full-stack Next.js application that allows users to register, upload, and view pets—especially cats. Built with Supabase for backend services and ImageKit for image hosting, the app is styled with ShadCN UI and tested using Playwright.
+
+Live Site: [do-you-see-my-cat.vercel.app](https://do-you-see-my-cat.vercel.app)
+
+---
+
+## 🚀 Features
+
+- User registration and management via Supabase
+- Pet creation, editing, and deletion
+- Image uploads stored and optimized with ImageKit
+- REST API endpoints for both users and pets
+- Debug and health check routes
+- Clean and modern UI with ShadCN
+- End-to-end testing with Playwright
+
+---
+
+## 🧰 Tech Stack
+
+- **Frontend**: [Next.js](https://nextjs.org/), [React](https://reactjs.org/)
+- **Backend/Database**: [Supabase](https://supabase.com/)
+- **Image Hosting**: [ImageKit](https://imagekit.io/)
+- **UI Components**: [ShadCN](https://ui.shadcn.com/)
+- **Testing**: [Playwright](https://playwright.dev/)
+- **Deployment**: [Vercel](https://vercel.com/)
+
+---
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- Node.js v18+
+- A `.env.local` file with your Supabase and ImageKit credentials
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000` to view the app locally.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧪 Debug Routes
 
-## Learn More
+- **Environment Variables Check**
+  [`/api/debug`](https://do-you-see-my-cat.vercel.app/api/debug)
+  Confirms accessible environment variables.
 
-To learn more about Next.js, take a look at the following resources:
+- **Server Health Check**
+  [`/api/health`](https://do-you-see-my-cat.vercel.app/api/health)
+  Verifies server status and Supabase connection.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 API Reference
 
-## Deploy on Vercel
+### 🧑 Users
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### `GET /api/users`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Fetch all users.
+
+#### `POST /api/users`
+
+Create a new user.
+**Request Body:**
+
+```json
+{
+  "email": "user@example.com",
+  "name": "Jane Doe"
+}
+```
+
+#### `GET /api/users/[email]`
+
+Get user by email.
+
+#### `DELETE /api/users/[email]`
+
+Delete user by email.
+
+---
+
+### 🐱 Pets
+
+#### `GET /api/pets`
+
+Fetch all pets.
+
+#### `POST /api/pets`
+
+Create a new pet.
+**Request Body:**
+
+```json
+{
+  "name": "Whiskers",
+  "ownerEmail": "user@example.com",
+  "imageUrl": "https://ik.imagekit.io/your_path/cat.jpg"
+}
+```
+
+#### `GET /api/pets/[id]`
+
+Fetch a specific pet by ID.
+
+#### `PUT /api/pets/[id]`
+
+Update pet details.
+**Request Body:**
+
+```json
+{
+  "name": "Mittens"
+}
+```
+
+#### `DELETE /api/pets/[id]`
+
+Delete a pet by ID.
+
+---
+
+## 🧪 Testing
+
+This project uses **Playwright** for end-to-end testing.
+Run tests with:
+
+```bash
+npx playwright test
+```
+
+---
+
+## 📸 Image Hosting
+
+Images are uploaded and stored via **ImageKit**. Make sure your ImageKit credentials are set in `.env.local`.
+
+---
+
+## 🌐 Deployment
+
+The project is deployed on [Vercel](https://vercel.com). Push to the `main` branch to trigger deployment.
+
+---
+
+## 🧾 License
+
+MIT

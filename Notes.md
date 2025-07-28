@@ -1,20 +1,3 @@
-# Notes
-
-## Issues
-
-- come up with a cleaner way to reload the page after a new image is uploaded
-
-## Prisma
-
-create new migration after changing schema
-npx prisma migrate dev --name update_name_notes
-
-seed data
-npx prisma db seed
-
-check db with prisma studio
-npx prisma studio
-
 ## Debug Routes
 
 ### Check if env variables are accessible
