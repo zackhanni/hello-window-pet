@@ -25,7 +25,7 @@ type ParentPet = {
   user_id?: string;
 };
 
-const schema = createSchema({
+const schema = createSchema<{ req: NextRequest }>({
   typeDefs: `
     type User {
         id: ID!
@@ -65,12 +65,12 @@ const schema = createSchema({
     Query: {
       users: async () => {
         const { data, error } = await supabase.from("users").select("*");
-        if (error) throw new Error(error.message);
+        if (error) throw new Error(`Error querying users: ${error.message}`);
         return data;
       },
       pets: async () => {
         const { data, error } = await supabase.from("pets").select("*");
-        if (error) throw new Error(error.message);
+        if (error) throw new Error(`Error querying pets: ${error.message}`);
         return data;
       },
     },
@@ -103,12 +103,32 @@ const schema = createSchema({
     Mutation: {
       addUser: async (_: unknown, args: { name: string; email: string }) => {
         const { name, email } = args;
+
+        // Check for existing user
+        const { data: existingUser, error: checkError } = await supabase
+          .from("users")
+          .select("id")
+          .eq("email", email)
+          .single();
+
+        if (checkError && checkError.code !== "PGRST116") {
+          // Allow "no rows" error (not found), but throw others
+          throw new Error(
+            `Error checking existing user: ${checkError.message}`
+          );
+        }
+
+        if (existingUser) {
+          throw new Error(`User with email "${email}" already exists.`);
+        }
+
+        // Create new user
         const { data, error } = await supabase
           .from("users")
           .insert([{ name, email }])
           .select()
           .single();
-        if (error) throw new Error(error.message);
+        if (error) throw new Error(`Error creating user: ${error.message}`);
         return data;
       },
       editUser: async (_: unknown, args: EditUserArgs) => {
@@ -117,13 +137,18 @@ const schema = createSchema({
         const updatedUser: Partial<EditUserArgs> = {};
         if (name !== undefined) updatedUser.name = name;
         if (email !== undefined) updatedUser.email = email;
+
         const { data, error } = await supabase
           .from("users")
           .update(updatedUser)
           .eq("id", id)
           .select()
           .single();
-        if (error) throw new Error(error.message);
+
+        if (error?.code === "PGRST116") {
+          throw new Error(`User with id "${id}" not found.`);
+        }
+        if (error) throw new Error(`Error updating user: ${error.message}`);
         return data;
       },
 
@@ -135,15 +160,23 @@ const schema = createSchema({
           age: number;
           species: string;
           imageUrl: string;
+          userId: string;
         }
       ) => {
-        const { name, description, age, species, imageUrl } = args;
+        const { name, description, age, species, imageUrl, userId } = args;
+
+        if (!name || !userId) {
+          throw new Error(
+            "Missing required fields: 'name' and 'userId' are required."
+          );
+        }
+
         const { data, error } = await supabase
           .from("pets")
-          .insert([{ name, description, age, species, imageUrl }])
+          .insert([{ name, description, age, species, imageUrl, userId }])
           .select()
           .single();
-        if (error) throw new Error(error.message);
+        if (error) throw new Error(`Error adding pet: ${error.message}`);
         return data;
       },
       editPet: async (_: unknown, args: EditPetArgs) => {
@@ -161,7 +194,7 @@ const schema = createSchema({
           .eq("id", id)
           .select()
           .single();
-        if (error) throw new Error(error.message);
+        if (error) throw new Error(`Error editing pet: ${error.message}`);
         return data;
       },
 
@@ -172,7 +205,11 @@ const schema = createSchema({
           .eq("id", id)
           .select()
           .single();
-        if (error) throw new Error(error.message);
+
+        if (error?.code === "PGRST116") {
+          throw new Error(`Pet with id "${id}" not found.`);
+        }
+        if (error) throw new Error(`Error deleting pet: ${error.message}`);
         return data;
       },
     },
