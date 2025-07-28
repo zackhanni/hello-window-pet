@@ -222,4 +222,10 @@ const yoga = createYoga<{ req: NextRequest }>({
   fetchAPI: { Request, Response },
 });
 
-export { yoga as GET, yoga as POST };
+export async function GET(request: NextRequest) {
+  return yoga.handleRequest(request, { req: request });
+}
+
+export async function POST(request: NextRequest) {
+  return yoga.handleRequest(request, { req: request });
+}
