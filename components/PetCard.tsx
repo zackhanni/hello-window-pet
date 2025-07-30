@@ -1,4 +1,4 @@
-"use client" // added for userRouter to work.
+"use client"; // added for userRouter to work.
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import { Image, ImageKitProvider } from "@imagekit/next";
 import Link from "next/link";
 import React from "react";
@@ -27,10 +27,13 @@ import { useRouter } from "next/navigation";
 import { useUserData } from "@/contexts/UserDataContext";
 import { GeneratePDF } from "./GeneratePDF";
 import CreatePet from "./CreatePet";
-import { deletePetPhotoFromImagekit, getPetPhotos } from "@/lib/userAndPetHelpers";
+import {
+  deletePetPhotoFromImagekit,
+  getPetPhotos,
+} from "@/lib/userAndPetHelpers";
 
-export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
-  const { id, name, species, image_url, description } = pet;
+export const PetCard = ({ pet, index }: { pet: Pet; index: number }) => {
+  const { id, name, species, imageUrl, description } = pet;
   const { databaseUser } = useUserData();
   const router = useRouter();
 
@@ -62,12 +65,14 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
     >
       <CardHeader className="w-full">
         <CardTitle data-testid="pet-name">{name}</CardTitle>
-        <CardDescription data-testid="pet-description">{description}</CardDescription>
+        <CardDescription data-testid="pet-description">
+          {description}
+        </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
           <Image
-            src={image_url ?? "pets/default-image.jpg"}
+            src={imageUrl ?? "pets/default-image.jpg"}
             priority={index === 0}
             width={300}
             height={300}
@@ -78,7 +83,6 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
         </ImageKitProvider>
       </CardContent>
       <CardFooter className="w-full flex flex-col gap-4">
-
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
@@ -86,7 +90,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
               className="bg-transparent text-destructive hover:text-white shadow-none w-full"
               data-testid="delete-report-button"
             >
-              {pet.user_id === databaseUser?.id ? "Delete" : "Report"} This Post
+              {pet.userId === databaseUser?.id ? "Delete" : "Report"} This Post
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -98,12 +102,17 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction className='bg-destructive hover:bg-destructive/60 text-white' onClick={() => handleDeletePost(pet.id)}>Continue</AlertDialogAction>
+              <AlertDialogAction
+                className="bg-destructive hover:bg-destructive/60 text-white"
+                onClick={() => handleDeletePost(pet.id)}
+              >
+                Continue
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
         <div className="flex flex-col gap-2 w-full">
-          <Link href={`/pets/${id}`} >
+          <Link href={`/pets/${id}`}>
             <Button
               variant={"accent"}
               className="w-full!"
@@ -112,7 +121,7 @@ export const PetCard = ({ pet, index }: { pet: Pet, index: number }) => {
               {`Visit this ${species ? species : "pet"}!`}
             </Button>
           </Link>
-          {pet.user_id === databaseUser?.id && (
+          {pet.userId === databaseUser?.id && (
             <>
               <GeneratePDF pet={pet} />
               <CreatePet pet={pet} />

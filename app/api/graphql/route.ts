@@ -23,6 +23,7 @@ type ParentUser = {
 
 type ParentPet = {
   user_id?: string;
+  image_url?: string;
 };
 
 const schema = createSchema<{ req: NextRequest }>({
@@ -31,7 +32,7 @@ const schema = createSchema<{ req: NextRequest }>({
         id: ID!
         name: String!
         email: String!
-        pet: Pet
+        pets: [Pet!]!
     }
 
     type Pet {
@@ -40,14 +41,18 @@ const schema = createSchema<{ req: NextRequest }>({
         description: String
         species: String
         age: Int
-        imageUrl: String    
+        imageUrl: String
         createdAt: String
+        userId: String!
         user: User
     }
 
     type Query {
         users: [User!]!
-        pets: [Pet!]!
+        user(email: String!): User
+        pets: [Pet]
+        userPets(userId: String!): [Pet]
+        pet(id: ID!): Pet
     }
 
     type Mutation {
@@ -68,9 +73,37 @@ const schema = createSchema<{ req: NextRequest }>({
         if (error) throw new Error(`Error querying users: ${error.message}`);
         return data;
       },
+      user: async (_: unknown, { email }: { email: string }) => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", email)
+          .single();
+        if (error) throw new Error(`Error querying user: ${error.message}`);
+        return data;
+      },
+
       pets: async () => {
         const { data, error } = await supabase.from("pets").select("*");
         if (error) throw new Error(`Error querying pets: ${error.message}`);
+        return data;
+      },
+      userPets: async (_: unknown, { userId }: { userId: string }) => {
+        const { data, error } = await supabase
+          .from("pets")
+          .select("*")
+          .eq("user_id", userId);
+        if (error)
+          throw new Error(`Error querying user's pets: ${error.message}`);
+        return data ?? [];
+      },
+      pet: async (_: unknown, args: { id: string }) => {
+        const { data, error } = await supabase
+          .from("pets")
+          .select("*")
+          .eq("id", args.id)
+          .single();
+        if (error) throw new Error(`Error querying pet: ${error.message}`);
         return data;
       },
     },
@@ -86,17 +119,19 @@ const schema = createSchema<{ req: NextRequest }>({
         if (error) return null;
         return data;
       },
+      imageUrl: (parent: ParentPet) => parent.image_url,
+      userId: (parent: ParentPet) => parent.user_id,
     },
 
     User: {
-      pet: async (parent: ParentUser) => {
+      pets: async (parent: ParentUser) => {
         const { data, error } = await supabase
           .from("pets")
           .select("*")
-          .eq("user_id", parent.id)
-          .maybeSingle();
-        if (error) return null;
-        return data;
+          .eq("user_id", parent.id);
+        if (error)
+          throw new Error(`Error fetching user's pets: ${error.message}`);
+        return data ?? [];
       },
     },
 
@@ -219,6 +254,7 @@ const schema = createSchema<{ req: NextRequest }>({
 const yoga = createYoga<{ req: NextRequest }>({
   schema,
   graphqlEndpoint: "/api/graphql",
+  maskedErrors: false,
   fetchAPI: { Request, Response },
 });
 

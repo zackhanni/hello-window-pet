@@ -6,7 +6,7 @@ Do You See My Cat?
 
 A full-stack Next.js application that allows users to register, upload, and view pets—especially cats. Built with Supabase for backend services and ImageKit for image hosting, the app is styled with ShadCN UI and tested using Playwright.
 
-Live Site: [do-you-see-my-cat.vercel.app](https://do-you-see-my-cat.vercel.app)
+Live Site: [hwllo-window-pet.vercel.app](https://hwllo-window-pet.vercel.app)
 
 ---
 
@@ -59,11 +59,11 @@ Visit `http://localhost:3000` to view the app locally.
 ## 🧪 Debug Routes
 
 - **Environment Variables Check**
-  [`/api/debug`](https://do-you-see-my-cat.vercel.app/api/debug)
+  [`/api/debug`](https://hello-window-pet.vercel.app/api/debug)
   Confirms accessible environment variables.
 
 - **Server Health Check**
-  [`/api/health`](https://do-you-see-my-cat.vercel.app/api/health)
+  [`/api/health`](https://hello-window-pet.vercel.app/api/health)
   Verifies server status and Supabase connection.
 
 ---
