@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 export const GeneratePDF = ({ pet }: { pet: Pet }) => {
   const generatePDF = async () => {
     const doc = new jsPDF();
-    const { id, name, image_url, species } = pet;
+    const { id, name, imageUrl, species } = pet;
 
     const pageWidth = doc.internal.pageSize.getWidth();
 
@@ -32,7 +32,7 @@ export const GeneratePDF = ({ pet }: { pet: Pet }) => {
     );
 
     // Pet Image
-    if (image_url) {
+    if (imageUrl) {
       try {
         const imageData = await fetch(
           `https://ik.imagekit.io/assortfit/${image_url}`
@@ -66,7 +66,7 @@ export const GeneratePDF = ({ pet }: { pet: Pet }) => {
   };
 
   return (
-    <Button variant={"default"} onClick={generatePDF}>
+    <Button variant={"outline"} onClick={generatePDF}>
       Generate QR code PDF
     </Button>
   );

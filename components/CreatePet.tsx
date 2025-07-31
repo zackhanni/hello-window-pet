@@ -63,7 +63,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
         //
         // If editing
         //
-        let imageUrl = pet.image_url;
+        let imageUrl = pet.imageUrl;
         if (values.image) {
           const uploadedImage = await uploadToImagekit(
             values.image,
@@ -133,7 +133,7 @@ const CreatePet = ({ pet }: { pet?: Pet }) => {
   return (
     <Form {...form}>
       <Dialog>
-        <Button variant={pet ? "default" : "accent"} asChild>
+        <Button variant={pet ? "outline" : "default"} asChild>
           <DialogTrigger>
             {pet ? "Update pet details" : "Add new pet"}
             {!pet && <Plus />}

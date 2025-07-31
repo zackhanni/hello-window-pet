@@ -2,7 +2,7 @@ import React from "react";
 
 const HowItWorks = () => {
   return (
-    <section className="bg-secondary p-4 rounded-lg">
+    <section className="bg-primary text-secondary p-4 md:p-8 rounded-lg">
       <h2 className="text-2xl font-bold pb-4">How It Works</h2>
       <ol className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ListItem

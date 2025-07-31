@@ -190,6 +190,7 @@ export const getPetById = async (id: string) => {
       species
       imageUrl
       description
+      userId
     }
   }
 `;
@@ -206,6 +207,7 @@ export const getAllPets = async () => {
         species
         imageUrl
         description
+        userId
       }
     }
   `;

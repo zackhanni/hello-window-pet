@@ -30,7 +30,7 @@ const RootLayout = async ({
       <SessionProvider session={session}>
         <UserDataProvider session={session}>
           <body
-            className={`${sourceSans.variable} ${geistMono.variable} antialiased`}
+            className={`${sourceSans.variable} ${geistMono.variable} antialiased bg-secondary text-primary`}
           >
             <Navigation session={session} />
             {children}

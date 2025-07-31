@@ -82,7 +82,7 @@ export const UploadButton = ({ petId }: { petId: string }) => {
   return (
     <Form {...form}>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <Button asChild variant={"accent"}>
+        <Button asChild variant={"default"}>
           <DialogTrigger>
             Upload Image
             <UploadIcon />

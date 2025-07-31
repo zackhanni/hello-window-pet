@@ -33,7 +33,7 @@ import {
 } from "@/lib/userAndPetHelpers";
 
 export const PetCard = ({ pet, index }: { pet: Pet; index: number }) => {
-  const { id, name, species, imageUrl, description } = pet;
+  const { id, name, species, imageUrl, description, userId } = pet;
   const { databaseUser } = useUserData();
   const router = useRouter();
 
@@ -60,12 +60,20 @@ export const PetCard = ({ pet, index }: { pet: Pet; index: number }) => {
 
   return (
     <Card
-      className="flex flex-col items-center justify-center max-w-md bg-secondary border-none rounded-lg shadow-none"
+      className="flex flex-col items-center justify-center max-w-md bg-secondary border rounded-lg text-primary"
       data-testid="pet-card"
     >
       <CardHeader className="w-full">
-        <CardTitle data-testid="pet-name">{name}</CardTitle>
-        <CardDescription data-testid="pet-description">
+        <CardTitle
+          data-testid="pet-name"
+          className="font-black text-center text-2xl"
+        >
+          {name}
+        </CardTitle>
+        <CardDescription
+          data-testid="pet-description"
+          className="font-medium text-primary/90"
+        >
           {description}
         </CardDescription>
       </CardHeader>
@@ -87,10 +95,11 @@ export const PetCard = ({ pet, index }: { pet: Pet; index: number }) => {
           <AlertDialogTrigger asChild>
             <Button
               variant={"destructive"}
-              className="bg-transparent text-destructive hover:text-white shadow-none w-full"
+              className="w-full"
               data-testid="delete-report-button"
             >
-              {pet.userId === databaseUser?.id ? "Delete" : "Report"} This Post
+              {/* TO DO - this isnt working on pages outside of account */}
+              {userId === databaseUser?.id ? "Delete" : "Report"} This Post
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -114,7 +123,7 @@ export const PetCard = ({ pet, index }: { pet: Pet; index: number }) => {
         <div className="flex flex-col gap-2 w-full">
           <Link href={`/pets/${id}`}>
             <Button
-              variant={"accent"}
+              variant={"default"}
               className="w-full!"
               data-testid="visit-pet-button"
             >

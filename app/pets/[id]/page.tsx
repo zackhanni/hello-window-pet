@@ -43,48 +43,50 @@ export default async function PetPage({ params }: PageProps) {
   });
 
   return (
-    <main className="space-y-8 py-8">
-      <section>
-        <div className="flex items-center flex-col">
-          <h1 className="font-bold text-3xl">This is {pet.name}</h1>
-          {/* <p>from {cat.city}</p> */}
-          <p>They have been seen {photos.length} times.</p>
+    <div className="flex flex-col items-center justify-items-center gap-16 py-20 px-2">
+      <main className="space-y-8">
+        <section>
+          <div className="flex items-center flex-col">
+            <h1 className="font-bold text-3xl">This is {pet.name}</h1>
+            {/* <p>from {cat.city}</p> */}
+            <p>They have been seen {photos.length} times.</p>
 
-          <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
-            <Image
-              src={pet.imageUrl ?? "pets/default-image.jpg"}
-              width={300}
-              height={300}
-              alt={pet.name}
-              priority
-              className="rounded-lg"
-            />
-          </ImageKitProvider>
-        </div>
-      </section>
-      <section className="bg-secondary py-8">
-        <div className="flex items-center flex-col px-4">
-          <p>Have you seen this cat?</p>
-          <p className="pb-8">
-            Upload a photo to let the owner know they are ok!
-          </p>
-          <UploadButton petId={pet.id} />
-        </div>
-      </section>
-      <section>
-        <div className="flex items-center flex-col space-y-4">
-          <h2 className="text-2xl font-bold">Recent photos</h2>
-          {photos ? (
             <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
-              {sortedPhotos.map((photo) => (
-                <PetSharedImage photo={photo} pet={pet} key={photo.fileId} />
-              ))}
+              <Image
+                src={pet.imageUrl ?? "pets/default-image.jpg"}
+                width={300}
+                height={300}
+                alt={pet.name}
+                priority
+                className="rounded-lg"
+              />
             </ImageKitProvider>
-          ) : (
-            <p>No photos yet.</p>
-          )}
-        </div>
-      </section>
-    </main>
+          </div>
+        </section>
+        <section className="border border-primary py-8">
+          <div className="flex items-center flex-col px-4">
+            <p>Have you seen this cat?</p>
+            <p className="pb-8">
+              Upload a photo to let the owner know they are ok!
+            </p>
+            <UploadButton petId={pet.id} />
+          </div>
+        </section>
+        <section>
+          <div className="flex items-center flex-col space-y-4">
+            <h2 className="text-2xl font-bold">Recent photos</h2>
+            {photos ? (
+              <ImageKitProvider urlEndpoint="https://ik.imagekit.io/assortfit">
+                {sortedPhotos.map((photo) => (
+                  <PetSharedImage photo={photo} pet={pet} key={photo.fileId} />
+                ))}
+              </ImageKitProvider>
+            ) : (
+              <p>No photos yet.</p>
+            )}
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
