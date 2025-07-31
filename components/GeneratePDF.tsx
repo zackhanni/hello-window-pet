@@ -35,7 +35,7 @@ export const GeneratePDF = ({ pet }: { pet: Pet }) => {
     if (imageUrl) {
       try {
         const imageData = await fetch(
-          `https://ik.imagekit.io/assortfit/${image_url}`
+          `https://ik.imagekit.io/assortfit/${imageUrl}`
         )
           .then((res) => res.blob())
           .then((blob) => {
